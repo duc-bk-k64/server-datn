@@ -65,7 +65,6 @@ public class AuthController {
 			return responMessage;
 		}
 	}
-
 	@PostMapping("/signup")
 	@ResponseBody
 	public ResponMessage signup(@RequestBody SignInData signUp) {

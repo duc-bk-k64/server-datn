@@ -13,14 +13,13 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import hust.project3.config.jwtconfig.AuthEntryPointJWT;
 import hust.project3.config.jwtconfig.JwtFilter;
 import hust.project3.service.CustomUserDetailService;
 
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -46,8 +45,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Override
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/v3/api-docs", "/v2/api-docs", "/swagger-resources/**", "/swagger-ui.html",
-				"/webjars/**","/swagger-ui/**", "/configuration/security");
+				"/webjars/**", "/swagger-ui/**", "/configuration/security");
 	}
+
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http.cors().and().csrf().disable().exceptionHandling().authenticationEntryPoint(authEntryPointJWT);
@@ -69,5 +69,3 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 }
-
-
