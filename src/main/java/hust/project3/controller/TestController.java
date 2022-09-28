@@ -14,7 +14,7 @@ import hust.project3.model.ResponMessage;
 public class TestController {
 	@GetMapping("/")
 	@ResponseBody
-	@PreAuthorize("hasRole('ROLE_EMPLOYEE') and  hasAuthority('READ')")
+	@PreAuthorize("hasRole('ROLE_ADMIN') and  hasAuthority('READ')")
 	public ResponMessage test() {
 		ResponMessage responMessage= new ResponMessage();
 		responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);

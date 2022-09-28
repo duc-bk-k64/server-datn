@@ -9,17 +9,17 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import hust.project3.config.jwtconfig.AuthEntryPointJWT;
 import hust.project3.config.jwtconfig.JwtFilter;
+import hust.project3.service.CustomAccessDeniedHandler;
 import hust.project3.service.CustomUserDetailService;
-
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -55,6 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll().anyRequest().authenticated();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtFiller(), UsernamePasswordAuthenticationFilter.class);
+		http.exceptionHandling().accessDeniedHandler(accessDeniedHandler());
 
 	}
 
@@ -67,5 +68,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
+	}
+
+	@Bean
+	public AccessDeniedHandler accessDeniedHandler() {
+		return new CustomAccessDeniedHandler();
 	}
 }
