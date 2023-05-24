@@ -30,15 +30,15 @@ public class ExceptionHandler {
 		responMessage.setData(e.getMessage());
 		return responMessage;
 	}
-	@org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
-	@ResponseBody
-	public ResponMessage handle500(Exception e) {
-		ResponMessage responMessage=new ResponMessage();
-		responMessage.setMessage(Constant.MESSAGE.INTERNAL_ERROR);
-		responMessage.setResultCode(Constant.RESULT_CODE.INTERNAL_ERROR);
-		responMessage.setData(e.getMessage());
-		return responMessage;
-	}
+//	@org.springframework.web.bind.annotation.ExceptionHandler(Exception.class)
+//	@ResponseBody
+//	public ResponMessage handle500(Exception e) {
+//		ResponMessage responMessage=new ResponMessage();
+//		responMessage.setMessage(Constant.MESSAGE.INTERNAL_ERROR);
+//		responMessage.setResultCode(Constant.RESULT_CODE.INTERNAL_ERROR);
+//		responMessage.setData(e.getMessage());
+//		return responMessage;
+//	}
 
 
 }

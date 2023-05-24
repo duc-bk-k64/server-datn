@@ -9,8 +9,16 @@ import hust.project3.entity.Account;
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	Account findUserByUsername(String username);
 
-//	Boolean existByUsername(String username);
+	Boolean existsByEmail(String email);
+
 	Boolean existsByUsername(String username);
+
 	Account findByTokenForgotPassword(String token);
+
+	Boolean existsByTokenForgotPassword(String token);
+
+	Boolean existsByCode(String code);
+
+	Account findByCode(String code);
 
 }

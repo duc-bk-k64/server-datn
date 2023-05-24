@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,19 +15,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import lombok.AllArgsConstructor;
+import hust.project3.entity.BookTour.BookTour;
+import hust.project3.entity.CustomerCare.ThreadMessage;
+import hust.project3.entity.Money.Bill;
+import hust.project3.entity.Money.Refund;
+import hust.project3.entity.Tour.TourTrip;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Account {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,6 +47,13 @@ public class Account {
 	private Instant timeCreatioToken;
 	@Column
 	private String email;
+	@Column
+	private String code;
+	@Column
+	private String name;
+	
+	
+	
 	@JsonIgnore
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "account_role", joinColumns = {
@@ -54,4 +66,41 @@ public class Account {
 			@JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "permission_id", referencedColumnName = "id", nullable = false) })
 	private Set<Permission> permissions;
+
+	@JsonIgnore
+	@OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_id", referencedColumnName = "id")
+	private Profile profile;
+	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private Set<ThreadMessage> threadMessages;
+	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private Set<BookTour> bookTours;
+	
+	@JsonIgnore
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinTable(name = "account_tourtrip", joinColumns = {
+			@JoinColumn(name = "account_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
+					@JoinColumn(name = "tourtrip_id", referencedColumnName = "id", nullable = false) })
+	private Set<TourTrip> tourTrips ;
+	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private Set<Refund> refunds;
+	
+	@OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+	private Set<Bill> bills;
+
+	// oauth2
+	@Enumerated(EnumType.STRING)
+	private Provider provider;
+
+	public Provider getProvider() {
+		return provider;
+	}
+
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
+
 }

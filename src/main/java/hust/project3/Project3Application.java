@@ -1,9 +1,8 @@
 package hust.project3;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -14,12 +13,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @SpringBootApplication
 @EnableWebMvc
-
+@EnableCaching
 public class Project3Application {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Project3Application.class, args);
 	}
+
 	@Bean
 	public WebMvcConfigurer corConfigurer() {
 		return new WebMvcConfigurer() {
@@ -33,7 +33,7 @@ public class Project3Application {
 	@Bean
 	public RoleHierarchy roleHierarchy() {
 		RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-		String hierarchy = "ROLE_ADMIN > ROLE_MANAGER \n ROLE_MANAGER > ROLE_EMPLOYEE";
+		String hierarchy = "ROLE_ADMIN > ROLE_STAFF";
 		roleHierarchy.setHierarchy(hierarchy);
 		return roleHierarchy;
 	}

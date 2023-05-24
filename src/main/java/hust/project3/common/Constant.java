@@ -15,6 +15,8 @@ public class Constant {
 		public static final Long NOT_ALLOWED = 405L;
 		public static final Long BAN_USER = -2L;
 		public static final Long INTERNAL_ERROR = 500L;
+		public static final Long UNAUTHORIZED = 403L;
+		
 
 	}
 
@@ -31,17 +33,20 @@ public class Constant {
 		public static final String NOT_FOUND_USER = "Not found user in system";
 		public static final String PASSWORD_INCORRECT = "Password incorrect";
 		public static final String USERNAME_EXIST = "Username already exist";
+		public static final String EMAIL_EXIST = "Email already exist";
 		public static final String ACCOUNT_USED = "Account is used by other people";
 		public static final String NOT_FOUND_HANDLE = "Not found api";
 		public static final String NOT_ALLOWED = "Method not allowed";
 		public static final String BAN_USER = "User is banned";
 		public static final String INTERNAL_ERROR = "INTERNAL SERVER ERROR";
+		public static final String ACCOUNT_DEACTIVE = "Account is deactive";
 	}
 
 	public static final class ROLE {
-		public static final String EMPLOYEE = "ROLE_EMPLOYEE";
-		public static final String MANAGER = "ROLE_MANAGER";
+		public static final String USER = "ROLE_USER";
+		public static final String STAFF = "ROLE_STAFFF";
 		public static final String ADMIN = "ROLE_ADMIN";
+		public static  final String  TOUR_GUIDE = "ROLE_TOURGUIDE";
 	}
 
 	public static final class PERMISSION {
