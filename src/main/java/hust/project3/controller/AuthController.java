@@ -36,6 +36,7 @@ import hust.project3.model.facebookResponse;
 import hust.project3.model.fotgotPW;
 import hust.project3.model.googleModel;
 import hust.project3.model.googleResponse;
+import hust.project3.model.loginResponse;
 import hust.project3.repository.AccountRepository;
 import hust.project3.repository.PermissionRepository;
 import hust.project3.repository.RoleRepository;
@@ -85,9 +86,14 @@ public class AuthController {
 
 		else {
 			String token = jwtProvider.generateToken(data.getUserName());
+			Set<Role> roles = account.getRoles();
+			loginResponse loginResponse = new loginResponse();
+			loginResponse.setToken(token);
+			loginResponse.setUsername(data.getUserName());
+			loginResponse.setRole(roles.iterator().next().getName());
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-			responMessage.setData(token);
+			responMessage.setData(loginResponse);
 			return responMessage;
 		}
 	}

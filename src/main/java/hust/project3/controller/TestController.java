@@ -3,6 +3,7 @@ package hust.project3.controller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -20,16 +21,22 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import hust.project3.common.Constant;
+import hust.project3.entity.Notification;
 import hust.project3.entity.cache;
 import hust.project3.model.ResponMessage;
 import hust.project3.model.SignInData;
 import hust.project3.repository.cacheRepository;
+import hust.project3.service.NotificationService;
 
 @RestController
 @RequestMapping(Constant.API.PREFIX)
+@CacheConfig(cacheNames = "cache")
 public class TestController {
 	@Autowired
 	private cacheRepository cacheRepository;
+	
+	@Autowired
+	private NotificationService notificationService;
 
 	@GetMapping("/")
 	@ResponseBody
@@ -39,6 +46,7 @@ public class TestController {
 		responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 		responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 		responMessage.setData("Tour guide");
+		this.notificationService.test();
 		return responMessage;
 	}
 
@@ -89,6 +97,26 @@ public class TestController {
 		cacheRepository.deleteById(id);
 		return responMessage;
 
+	}
+	@GetMapping("/notifi")
+	@ResponseBody
+	public ResponMessage notifi(@RequestParam String username) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			responMessage.setData(null);
+			Notification notification = new Notification();
+			notification.setUsername(username);
+			notification.setTitle("abcd dddd");
+			this.notificationService.sendNotifcationToUser(username,notification);
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	
 	}
 
 }

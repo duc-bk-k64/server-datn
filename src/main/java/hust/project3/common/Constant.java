@@ -6,6 +6,12 @@ public class Constant {
 		public static final Long DE_ACTIVE = 0L;
 		public static final Long DELETED = -2L;
 		public static final Long SIGNUP = -1L;
+		public static final String UN_CONFIMRED = "unconfimred";
+		public static final String CONFIMRED = "confimred";
+		public static final String PAID = "paid";
+		public static final String READED = "readed";
+		public static final String UNREAD = "unread";
+		
 	}
 
 	public static final class RESULT_CODE {
@@ -56,4 +62,5 @@ public class Constant {
 		public static final String CREATE = "CREATE";
 
 	}
+	
 }

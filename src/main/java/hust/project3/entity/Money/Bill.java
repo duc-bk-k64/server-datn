@@ -1,5 +1,7 @@
 package hust.project3.entity.Money;
 
+import java.time.Instant;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,6 +32,9 @@ public class Bill {
 	private String detail;
 	@Column
 	private String status;
+	
+	@Column
+	private Instant timeCreated;
 	
 	@ManyToOne 
     @JoinColumn(name = "account_id") 

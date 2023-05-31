@@ -22,7 +22,7 @@ public class Paragraph {
 	private Long id;
 	@Column
 	private String title;
-	@Column
+	@Column(length = 10000)
 	private String  content;
 	@Column
 	private String imageUrl;

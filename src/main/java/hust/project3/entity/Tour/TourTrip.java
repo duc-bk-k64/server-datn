@@ -35,6 +35,9 @@ public class TourTrip {
 	@Column
 	private String status;
 	
+	@Column(length = 5000)
+	private String note;
+	
 	@ManyToMany(mappedBy = "tourTrips")
 	private Set<Account> account;
 	

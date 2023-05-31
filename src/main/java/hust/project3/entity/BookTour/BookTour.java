@@ -1,5 +1,6 @@
 package hust.project3.entity.BookTour;
 
+import java.time.Instant;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -12,7 +13,9 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Account;
+import hust.project3.model.BookTourModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -32,7 +35,7 @@ public class BookTour {
 	@Column
 	private String tourTripCode;
 	@Column
-	private Date timeCreate;
+	private Instant timeCreate;
 	@Column
 	private String status;
 	@Column
@@ -42,7 +45,21 @@ public class BookTour {
 	
 	@JsonIgnore
 	@ManyToOne 
-    @JoinColumn(name = "account_id") 
+    @JoinColumn(name = "account_id",nullable = false) 
 	private Account account;
+	
+	public BookTourModel toModel() {
+		BookTourModel bookTourModel = new BookTourModel();
+		bookTourModel.setId(this.id);
+		bookTourModel.setCode(this.code);
+		bookTourModel.setDetail(this.detail);
+		bookTourModel.setEmail(this.email);
+		bookTourModel.setMoneyToPay(this.moneyToPay);
+		bookTourModel.setName(this.name);
+		bookTourModel.setStatus(this.status);
+		bookTourModel.setTimeCreate(DateUtils.Instant2String(this.timeCreate));
+		bookTourModel.setTourTripCode(this.tourTripCode);
+		return bookTourModel;
+	}
 
 }

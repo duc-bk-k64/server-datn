@@ -1,5 +1,7 @@
 package hust.project3.entity.Money;
 
+import java.time.Instant;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,5 +27,10 @@ public class Transaction {
 	private String createdBy;
 	@Column
 	private String status;
+
+	@Column
+	private Instant timeCreated;
+	@Column
+	private String type;
 
 }
