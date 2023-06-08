@@ -15,6 +15,8 @@ public interface BookTourRepository extends JpaRepository<BookTour,Long> {
 	BookTour findBookTourById(@Param("id") Long id);
 	
 	List<BookTour> findByTourTripCode(String tourTripCode);
+
+	Boolean existsByCode(String code);
 	
 //	@Query(value= "SELECT * FROM book_tour where account_id = :account_id")
 //	List<BookTour> findByAccountID(@Param("account_id") Long account_id);

@@ -16,5 +16,7 @@ public class BookTourModel {
 	private String status;
 	private Long moneyToPay;
 	private String detail;
+	private int numberOfAdjust;
+	private  int numberOfChildren;
 
 }

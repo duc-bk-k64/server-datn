@@ -42,6 +42,10 @@ public class BookTour {
 	private Long moneyToPay;
 	@Column
 	private String detail;
+	@Column
+	private  int numberOfAdjust;
+	@Column
+	private  int numberOfChildren;
 	
 	@JsonIgnore
 	@ManyToOne 
@@ -59,6 +63,8 @@ public class BookTour {
 		bookTourModel.setStatus(this.status);
 		bookTourModel.setTimeCreate(DateUtils.Instant2String(this.timeCreate));
 		bookTourModel.setTourTripCode(this.tourTripCode);
+		bookTourModel.setNumberOfAdjust(numberOfAdjust);
+		bookTourModel.setNumberOfChildren(numberOfChildren);
 		return bookTourModel;
 	}
 

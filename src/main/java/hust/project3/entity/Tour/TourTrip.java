@@ -14,7 +14,9 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Account;
+import hust.project3.model.Tour.TourTripModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -45,4 +47,16 @@ public class TourTrip {
     @JoinColumn(name = "tour_id") 
 	@JsonIgnore
 	private Tour tour;
+
+	public TourTripModel toModel() {
+		TourTripModel tourTrip = new TourTripModel();
+		tourTrip.setStatus(status);
+		tourTrip.setId(id);
+		tourTrip.setNote(note);
+		tourTrip.setDepartureDay(DateUtils.Date2String(departureDay));
+		tourTrip.setPrice(price);
+		tourTrip.setCode(code);
+		tourTrip.setPriceForChidren(priceForChidren);
+		return  tourTrip;
+	}
 }

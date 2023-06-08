@@ -16,6 +16,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.model.Tour.TourModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -57,7 +58,21 @@ public class Tour {
 			@JoinColumn(name = "tour_id", referencedColumnName = "id", nullable = false) }, inverseJoinColumns = {
 					@JoinColumn(name = "destination_id", referencedColumnName = "id", nullable = false) })
 	private Set<Destination> destinations;
-	
+
+	public TourModel toModel() {
+		TourModel tour = new TourModel();
+		tour.setCode(code);
+		tour.setCreatedBy(createdBy);
+		tour.setDeparture(departure);
+		tour.setId(id);
+		tour.setImageUrl(imageUrl);
+		tour.setName(name);
+		tour.setNumberOfDay(numberOfDay);
+		tour.setNumberOfNight(numberOfNight);
+		tour.setStatus(status);
+		return tour;
+
+	}
 	
 
 }

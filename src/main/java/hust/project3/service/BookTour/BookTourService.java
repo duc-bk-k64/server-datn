@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import hust.project3.Utils.GenerateCode;
+import hust.project3.entity.Tour.TourTrip;
+import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.stereotype.Service;
@@ -24,19 +27,23 @@ public class BookTourService {
 	@Autowired
 	private AccountRepository accountRepository;
 
+	@Autowired
+	private TourTripService tourTripService;
+
 	public ResponMessage create(String username, BookTour bookTour) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
 			Account account = accountRepository.findUserByUsername(username);
-//			Set<BookTour> bookTours = account.getBookTours();
-//			if(bookTours == null) {
-//				bookTours = new HashSet<>();
-//			}
+			TourTrip tourTrip = tourTripService.findByTripCode(bookTour.getTourTripCode());
+			Long totalMoney = tourTrip.getPrice()*bookTour.getNumberOfAdjust() + tourTrip.getPriceForChidren()*bookTour.getNumberOfChildren();
 			bookTour.setStatus(Constant.STATUS.UN_CONFIMRED);
+			String code = GenerateCode.generateCode();
+			while (bookTourRepository.existsByCode(code)) {
+				code =GenerateCode.generateCode();
+			}
+			bookTour.setCode(code);
 			bookTour.setTimeCreate(Instant.now());
-//			bookTours.add(bookTour);
-//			account.setBookTours(bookTours);
-//			accountRepository.save(account);
+			bookTour.setMoneyToPay(totalMoney);
 			bookTour.setAccount(account);
 			bookTourRepository.save(bookTour);
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
@@ -152,6 +159,7 @@ public class BookTourService {
 			} else {
 			    bookTour.setStatus(Constant.STATUS.PAID);
 				bookTourRepository.save(bookTour);
+				tourTripService.addTourTripToAccount(bookTour.getAccount().getUsername(),bookTour.getTourTripCode());
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 				responMessage.setData(bookTour.toModel());

@@ -11,7 +11,12 @@ public class Constant {
 		public static final String PAID = "paid";
 		public static final String READED = "readed";
 		public static final String UNREAD = "unread";
-		
+		public static final String AVAILABLE = "available";
+		public static final String UNAVAILABLE = "unavailable";
+
+		public static final String ONTRIP = "ontrip";
+
+		public static final String FINISH = "finish";
 	}
 
 	public static final class RESULT_CODE {
@@ -61,6 +66,13 @@ public class Constant {
 		public static final String DELETE = "DELETE";
 		public static final String CREATE = "CREATE";
 
+	}
+	
+	public static final class DEPARTURE {
+		public static final String HANOI ="hanoi";
+		public static final String TPHCM = "tphcm";
+		public static final String HAIDUONG = "haiduong";
+		public static final String HAIPHONG = "haiphong";
 	}
 	
 }

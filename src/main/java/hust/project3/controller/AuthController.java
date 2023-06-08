@@ -5,6 +5,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import hust.project3.service.Post.ParagraphService;
+import hust.project3.service.Post.PostService;
+import hust.project3.service.Tour.*;
 import org.aspectj.weaver.NewConstructorTypeMunger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +60,22 @@ public class AuthController {
 	private PermissionRepository permissionRepository;
 	@Autowired
 	private AccountService accountService;
+
+	@Autowired
+	private TourService tourService;
+
+	@Autowired
+	private PostService postService;
+	@Autowired
+	private ParagraphService paragraphService;
+	@Autowired
+	private TourTripService tourTripService;
+	@Autowired
+	private PitstopService pitstopService;
+	@Autowired
+	private FeedbackService feedbackService;
+	@Autowired
+	private DestinationService destinationService;
 
 	private RestTemplate restTemplate = new RestTemplate();
 	private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -325,4 +344,72 @@ public class AuthController {
 		}
 		return responMessage;
 	}
+
+	@GetMapping("/tour/findAlls")
+	@ResponseBody
+	public ResponMessage findAllTour() {
+		return tourService.findAll();
+	}
+	@GetMapping("/trip/findByTourId")
+	@ResponseBody
+	public  ResponMessage findByTourId(@RequestParam Long tourId) {
+		return tourTripService.findTripAvailableByTourId(tourId);
+	}
+	@GetMapping("/trip/findTripByTripCode")
+	@ResponseBody
+	public ResponMessage findTripByTripCode(@RequestParam String code) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			responMessage.setData(tourTripService.findByTripCode(code).toModel());
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+	@GetMapping("/trip/findTourTripInfor")
+	@ResponseBody
+	public ResponMessage findTourTripInforByTripCode(@RequestParam String code) {
+		return tourTripService.findTourTripInfor(code);
+
+	}
+	@GetMapping("/pitstop/findByTourId")
+	@ResponseBody
+	public ResponMessage findPitstopByTourId(@RequestParam Long tourId) {
+		return pitstopService.findByTourId(tourId);
+	}
+	@GetMapping("/feedback/findByTourId")
+	@ResponseBody
+	public  ResponMessage findFeedbackByTourId(@RequestParam Long tourId) {
+		return feedbackService.findByTourId(tourId);
+	}
+	@GetMapping("/des/findAll")
+	@ResponseBody
+	public ResponMessage findAllDes() {
+		return destinationService.findAll();
+	}
+	@GetMapping("/des/findByTourId")
+	@ResponseBody
+	public ResponMessage findDesByTourId(@RequestParam Long tourId) {
+		return destinationService.findByTourId(tourId);
+	}
+	@GetMapping("/post/findByDestiantion")
+	@ResponseBody
+	public ResponMessage findByDestination(@RequestParam Long  desId) {
+		return postService.findByDestination(desId);
+	}
+
+	@GetMapping("/paragraph/findByPostId")
+	@ResponseBody
+	public ResponMessage findParagraphByPostId(@RequestParam  Long postId) {
+		return paragraphService.findByPostId(postId);
+	}
+	@GetMapping("/tour/findTourId")
+	@ResponseBody
+	public ResponMessage findTourById(@RequestParam  Long tourId) {
+		return tourService.findById(tourId);
+	}
+
 }

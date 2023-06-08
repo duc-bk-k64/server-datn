@@ -11,6 +11,7 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.model.Tour.PitStopModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -34,6 +35,17 @@ public class PitStop {
     @JoinColumn(name = "tour_id") 
 	@JsonIgnore
 	private Tour tour;
+
+	public PitStopModel toModel() {
+		PitStopModel pitStop = new PitStopModel();
+		pitStop.setId(id);
+		pitStop.setContent(content);
+		pitStop.setName(name);
+		pitStop.setOrder(order);
+		pitStop.setImageUrl(imageUrl);
+		return pitStop;
+	}
+
 	
 
 }
