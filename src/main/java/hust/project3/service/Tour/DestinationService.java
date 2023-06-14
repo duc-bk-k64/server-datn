@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import hust.project3.model.Tour.DestinationModel;
+import hust.project3.model.Tour.TourModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -67,5 +68,25 @@ public class DestinationService {
 		}
 		return responMessage;
 	}
+
+	public ResponMessage findTourByDesId(Long desId) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			List<TourModel> tourModels = new ArrayList<>();
+			Destination destination = tourDestinationRepository.findDesById(desId);
+			destination.getTours().forEach(e -> {
+				tourModels.add(e.toModel());
+			});
+			responMessage.setData(tourModels);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+
 
 }

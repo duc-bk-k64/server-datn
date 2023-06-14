@@ -20,6 +20,8 @@ public class TourTripModel {
     private String status;
     private String note;
 
+    private  String tourGuide;
+
     public TourTrip toObject() throws ParseException {
         TourTrip tourTrip = new TourTrip();
         tourTrip.setStatus(status);
@@ -28,6 +30,7 @@ public class TourTripModel {
         tourTrip.setDepartureDay(DateUtils.String2Date(departureDay));
         tourTrip.setPrice(price);
         tourTrip.setPriceForChidren(priceForChidren);
+        tourTrip.setTourGuide(tourGuide);
         return tourTrip;
     }
 }

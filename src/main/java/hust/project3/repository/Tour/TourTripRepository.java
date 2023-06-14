@@ -24,4 +24,7 @@ public interface TourTripRepository extends JpaRepository<TourTrip,Long> {
 	@Query(value = "SELECT * FROM tour_trip where id = :id", nativeQuery = true)
 	TourTrip findTripById(@Param("id") Long id);
 
+	@Query(value = "SELECT * FROM tour_trip where tour_guide = :username order by departure_day desc", nativeQuery = true)
+	List<TourTrip> findTripByTourGuide(@Param("username") String username);
+
 }

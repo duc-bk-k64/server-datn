@@ -1,7 +1,10 @@
 package hust.project3.service.Post;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import hust.project3.model.Post.PostModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -57,7 +60,11 @@ public class PostService {
 		try {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-			responMessage.setData(postRepository.findAll());
+			List<PostModel> postModels = new ArrayList<>();
+			postRepository.findAllPost().forEach(e -> {
+				postModels.add(e.toModel());
+			});
+			responMessage.setData(postModels);
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 			responMessage.setMessage(e.getMessage());
@@ -70,7 +77,11 @@ public class PostService {
 		try {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-			responMessage.setData(postRepository.findPostByDestinationId(id));
+			List<PostModel> postModels = new ArrayList<>();
+			postRepository.findPostByDestinationId(id).forEach(e -> {
+				postModels.add(e.toModel());
+			});
+			responMessage.setData(postModels);
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 			responMessage.setMessage(e.getMessage());
@@ -93,6 +104,19 @@ public class PostService {
 		return responMessage;
 		
 	}
+	public ResponMessage findById(Long id) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			responMessage.setData(postRepository.findPostById(id).toModel());
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+
+	}
 	public ResponMessage available(Long id) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -107,6 +131,41 @@ public class PostService {
 		}
 		return responMessage;
 		
+	}
+
+	public ResponMessage findDesByPostId(Long id) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			Post post = postRepository.findPostById(id);
+			responMessage.setData(post.getDestination());
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+
+	}
+
+	public ResponMessage deleteById(Long id) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			Post post = postRepository.findPostById(id);
+			if(post.getParagraphs().size() == 0 ) {
+				postRepository.delete(post);
+			} else {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.ERROR);
+			}
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+
 	}
 	
 	

@@ -39,6 +39,9 @@ public class TourTrip {
 	
 	@Column(length = 5000)
 	private String note;
+
+	@Column
+	private String tourGuide;
 	
 	@ManyToMany(mappedBy = "tourTrips")
 	private Set<Account> account;
@@ -57,6 +60,7 @@ public class TourTrip {
 		tourTrip.setPrice(price);
 		tourTrip.setCode(code);
 		tourTrip.setPriceForChidren(priceForChidren);
+		tourTrip.setTourGuide(tourGuide);
 		return  tourTrip;
 	}
 }

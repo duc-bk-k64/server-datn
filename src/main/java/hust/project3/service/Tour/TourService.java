@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import hust.project3.entity.Tour.TourTrip;
+import hust.project3.model.Tour.FindTourModel;
 import hust.project3.model.Tour.TourModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,22 @@ public class TourService {
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			ArrayList<TourModel> tourModels = new ArrayList<>();
 			tourRepository.findAll().forEach(e -> {
+				tourModels.add(e.toModel());
+			});
+			responMessage.setData(tourModels);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+	public ResponMessage findAllAvailable() {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			ArrayList<TourModel> tourModels = new ArrayList<>();
+			tourRepository.findTourAvailable().forEach(e -> {
 				tourModels.add(e.toModel());
 			});
 			responMessage.setData(tourModels);
@@ -128,6 +147,71 @@ public class TourService {
 			responMessage.setMessage(e.getMessage());
 		}
 		return responMessage;
+	}
+
+	public ResponMessage deleteById(Long id) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			Tour tour =tourRepository.findTourById(id);
+			if(tour.getTourTrips().size() ==0 && tour.getPitStops().size() ==0 ) {
+				tour.setDestinations(null);
+				tourRepository.save(tour);
+				Thread.sleep(1000);
+				tourRepository.deleteById(id);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			}
+			else {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.ERROR);
+			}
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+	public ResponMessage findTour(FindTourModel data) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			String[] time = data.getTime().split("-");
+			int minTime = Integer.valueOf(time[0]);
+			int maxTime = Integer.valueOf(time[1]);
+			String[] price = data.getPrice().split("-");
+			long minPrice = Long.parseLong(price[0]);
+			long maxPrice = Long.parseLong(price[1]);
+
+			List<Tour> tourList = tourRepository.findTour(data.getDeparture(), minTime,maxTime);
+			List<TourModel> selectedTour = new ArrayList<>();
+			Destination destination = tourDestinationRepository.findDesById(data.getDestination());
+			for(int i = 0; i<tourList.size() ; i++) {
+				boolean isAdd = false;
+				if(tourList.get(i).getDestinations().contains(destination)) {
+					Set<TourTrip> tourTrip = tourList.get(i).getTourTrips();
+					for(TourTrip trip : tourTrip){
+						if(trip.getPrice() >= minPrice & trip.getPrice() <= maxPrice & !isAdd ) {
+							selectedTour.add(tourList.get(i).toModel());
+							isAdd = true;
+						}
+					}
+
+				}
+			}
+
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			responMessage.setData(selectedTour);
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return  responMessage;
+
+
 	}
 
 }

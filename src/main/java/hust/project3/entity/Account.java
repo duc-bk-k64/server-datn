@@ -25,6 +25,7 @@ import hust.project3.entity.CustomerCare.ThreadMessage;
 import hust.project3.entity.Money.Bill;
 import hust.project3.entity.Money.Refund;
 import hust.project3.entity.Tour.TourTrip;
+import hust.project3.model.AccountModel;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -102,5 +103,13 @@ public class Account {
 	public void setProvider(Provider provider) {
 		this.provider = provider;
 	}
+
+	public AccountModel toModel() {
+		AccountModel accountModel = new AccountModel();
+		accountModel.setUsername(username);
+		accountModel.setEmail(email);
+		return accountModel;
+	}
+
 
 }

@@ -1,5 +1,6 @@
 package hust.project3.controller.BookTour;
 
+import hust.project3.model.BookTourModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,8 +34,8 @@ public class BookTourController {
 	
 	@PutMapping("/booktour/update")
 	@ResponseBody
-	public ResponMessage update(@RequestParam Long id, @RequestBody BookTour bookTour) {
-		return bookTourService.update(id, bookTour);
+	public ResponMessage update(@RequestParam Long id, @RequestBody BookTourModel bookTour) {
+		return bookTourService.update(id, bookTour.toObject());
 	}
 	
 	@PreAuthorize("hasRole('ROLE_STAFF')")

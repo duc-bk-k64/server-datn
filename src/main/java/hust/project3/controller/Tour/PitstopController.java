@@ -30,7 +30,7 @@ public class PitstopController {
         return pitstopService.findByTourId(tourId);
     }
 
-    @PutMapping("/pitstop/updateList")
+    @PostMapping("/pitstop/updateList")
     @ResponseBody
     public ResponMessage updateList(@RequestBody PitstopUpdate data, @RequestParam Long tourId) {
         return pitstopService.updateList(data.getPitStopModels(),tourId,data.getDeletePitstopId());

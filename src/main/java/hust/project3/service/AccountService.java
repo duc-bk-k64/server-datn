@@ -2,9 +2,15 @@ package hust.project3.service;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import hust.project3.entity.Role;
+import hust.project3.model.AccountModel;
+import hust.project3.model.ResponMessage;
+import hust.project3.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +33,9 @@ public class AccountService {
 	private PasswordEncoder passwordEncoder;
 	@Autowired
 	private ProfileRepository profileRepository;
+
+	@Autowired
+	private RoleRepository roleRepository;
 
 	public String forgotPassword(String username) throws Exception {
 		Account account = accountRepository.findUserByUsername(username);
@@ -121,6 +130,26 @@ public class AccountService {
 			return profile;
 		}
 
+	}
+
+	public ResponMessage getListTourGuide() {
+		ResponMessage responMessage = new ResponMessage();
+		try  {
+			List<AccountModel> accounts = new ArrayList<>();
+			Role role = roleRepository.findByName("ROLE_TOURGUIDE");
+			accountRepository.findAll().forEach(e -> {
+				if(e.getRoles().contains(role)) {
+					accounts.add(e.toModel());
+				}
+			});
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			responMessage.setData(accounts);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
 	}
 
 }

@@ -46,6 +46,8 @@ public class BookTour {
 	private  int numberOfAdjust;
 	@Column
 	private  int numberOfChildren;
+	@Column
+	private String phoneNumber;
 	
 	@JsonIgnore
 	@ManyToOne 
@@ -65,6 +67,7 @@ public class BookTour {
 		bookTourModel.setTourTripCode(this.tourTripCode);
 		bookTourModel.setNumberOfAdjust(numberOfAdjust);
 		bookTourModel.setNumberOfChildren(numberOfChildren);
+		bookTourModel.setPhoneNumber(phoneNumber);
 		return bookTourModel;
 	}
 

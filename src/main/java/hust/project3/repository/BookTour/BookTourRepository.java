@@ -13,6 +13,12 @@ import hust.project3.entity.BookTour.BookTour;
 public interface BookTourRepository extends JpaRepository<BookTour,Long> {
 	@Query(value = "SELECT * FROM book_tour  WHERE id = :id", nativeQuery = true)
 	BookTour findBookTourById(@Param("id") Long id);
+
+	@Query(value = "SELECT * FROM book_tour  WHERE status = :status", nativeQuery = true)
+	List<BookTour> findBookTourByStatus(@Param("status") String status);
+
+	@Query(value = "SELECT * FROM book_tour  order by  time_create desc ", nativeQuery = true)
+	List<BookTour> findAllBooktour();
 	
 	List<BookTour> findByTourTripCode(String tourTripCode);
 

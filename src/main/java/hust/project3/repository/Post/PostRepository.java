@@ -14,8 +14,11 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 	@Query(value = "SELECT * FROM post where id = :id", nativeQuery = true)
 	Post findPostById(@Param("id") Long id);
 	
-	@Query(value = "SELECT * FROM post where destination_id = :id and status = 'available'", nativeQuery = true)
+	@Query(value = "SELECT * FROM post where destination_id = :id and status = 'available' order by time_created desc", nativeQuery = true)
 	List<Post> findPostByDestinationId(@Param("id") Long id);
+
+	@Query(value = "SELECT * FROM post order by time_created desc ",nativeQuery = true)
+	List<Post> findAllPost();
 	
 //	@Query(value = "SELECT * FROM post where status = :status", nativeQuery = true)
 //	List<Post> findPostByStatus(@Param("status") String status);

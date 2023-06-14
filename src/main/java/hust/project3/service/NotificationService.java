@@ -27,6 +27,17 @@ public class NotificationService {
 			throw new Exception(e.getMessage());
 		}
 	}
+
+	public void sendToStaff(Notification message) throws Exception {
+		try {
+			message.setStatus(Constant.STATUS.UNREAD);
+			message.setTimeCreated(Instant.now());
+			notificationRepository.save(message);
+			simpMessagingTemplate.convertAndSend( "/topic/staff",message.getTitle());
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+	}
 	
 	public void test() {
 		this.simpMessagingTemplate.convertAndSend("/topic/test", "test abcd");

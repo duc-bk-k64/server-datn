@@ -35,6 +35,20 @@ public class TourTripController {
         return tourTripService.findByAll();
     }
 
+    @GetMapping("/trip/findByTourGuide")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_TOURGUIDE')")
+    public  ResponMessage findByTourGuide(@RequestParam String username) {
+        return tourTripService.findByTourGuideUsername(username);
+    }
+    @GetMapping("/trip/addTourguide")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_STAFF')")
+    public  ResponMessage addTourguide(@RequestParam String username,@RequestParam Long tripId) {
+        return tourTripService.addTourguide(tripId,username);
+    }
+
+
     @PutMapping("/trip/update")
     @PreAuthorize("hasRole('ROLE_STAFF')")
     @ResponseBody

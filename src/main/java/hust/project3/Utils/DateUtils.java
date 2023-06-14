@@ -1,10 +1,10 @@
 package hust.project3.Utils;
 
+import io.swagger.models.auth.In;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Locale;
@@ -30,5 +30,15 @@ public class DateUtils {
 		String string = dateTimeFormatter.format(instant);
 		return string;
 	}
+
+	public static Instant String2Instant(String s) {
+		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss",Locale.US);
+		LocalDateTime localDateTime = LocalDateTime.parse(s, dateTimeFormatter);
+		ZoneId zoneId = ZoneId.of("America/Chicago");
+		ZonedDateTime zonedDateTime = localDateTime.atZone(zoneId);
+		Instant instant = zonedDateTime.toInstant();
+		return  instant;
+	}
+
 
 }

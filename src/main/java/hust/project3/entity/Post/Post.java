@@ -15,7 +15,9 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Tour.Destination;
+import hust.project3.model.Post.PostModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -43,5 +45,16 @@ public class Post {
 	
 	@OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
 	private Set<Paragraph> paragraphs;
+
+	public PostModel toModel() {
+		PostModel post = new PostModel();
+		post.setId(id);
+		post.setStatus(status);
+		post.setTimeCreated(DateUtils.Date2String(timeCreated));
+		post.setCreatedBy(createdBy);
+		post.setTitle(title);
+		post.setImageUrl(imageUrl);
+		return post;
+	}
 
 }

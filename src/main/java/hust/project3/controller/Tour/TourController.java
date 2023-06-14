@@ -1,5 +1,6 @@
 package hust.project3.controller.Tour;
 
+import hust.project3.model.Tour.TourModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,20 @@ public class TourController {
 	@ResponseBody
 	public  ResponMessage openTour(@RequestParam Long tourId) {
 		return tourService.openTour(tourId);
+	}
+
+	@PutMapping("/tour/update")
+	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@ResponseBody
+	public  ResponMessage updateTour(@RequestParam Long tourId, @RequestBody TourModel  data) {
+		return tourService.update(data.toObject(),tourId);
+	}
+
+	@DeleteMapping("/tour/delete")
+	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@ResponseBody
+	public  ResponMessage deleteTour(@RequestParam Long tourId) {
+		return tourService.deleteById(tourId);
 	}
 
 	@PutMapping("/tour/close")

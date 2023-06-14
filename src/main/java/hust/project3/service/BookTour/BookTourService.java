@@ -6,7 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 import hust.project3.Utils.GenerateCode;
+import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TourTrip;
+import hust.project3.service.NotificationService;
 import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.CreatedBy;
@@ -30,6 +32,9 @@ public class BookTourService {
 	@Autowired
 	private TourTripService tourTripService;
 
+	@Autowired
+	private NotificationService notificationService;
+
 	public ResponMessage create(String username, BookTour bookTour) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -46,6 +51,12 @@ public class BookTourService {
 			bookTour.setMoneyToPay(totalMoney);
 			bookTour.setAccount(account);
 			bookTourRepository.save(bookTour);
+//			send notification to staff
+			Notification notification = new Notification();
+			notification.setUsername("SYSTEM");
+			notification.setTitle("Thông báo có đơn đặt tour mới");
+			notification.setContent("Hệ thông Travel xin thông báo hệ thống có đơn đặt tour mới vỡi mã "+bookTour.getCode() +".Nhân viên vui lòng kiểm tra, liên hệ và xác nhận khách hàng. Xin trân trọng cảm ơn.");
+			this.notificationService.sendToStaff(notification);
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			responMessage.setData(bookTour.toModel());
@@ -66,6 +77,7 @@ public class BookTourService {
 			} else {
 				bookTour2.setEmail(bookTour.getEmail());
 				bookTour2.setName(bookTour.getName());
+				bookTour2.setPhoneNumber(bookTour.getPhoneNumber());
 				bookTourRepository.save(bookTour2);
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
@@ -102,7 +114,7 @@ public class BookTourService {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			ArrayList<BookTourModel> bookTours = new ArrayList<>();
-			bookTourRepository.findAll().forEach(e -> {
+			bookTourRepository.findAllBooktour().forEach(e -> {
 				bookTours.add(e.toModel());
 			});
 			responMessage.setData(bookTours);
@@ -117,9 +129,15 @@ public class BookTourService {
 	public ResponMessage deleteById(Long id) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
-			bookTourRepository.deleteById(id);
-			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
-			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			BookTour bookTour = bookTourRepository.findBookTourById(id);
+			if(!bookTour.getStatus() .equals(Constant.STATUS.PAID)) {
+				bookTourRepository.deleteById(id);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			} else {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage("Không thể xóa vì đơn đặt tour đã được thanh toán");
+			}
 
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
@@ -139,6 +157,11 @@ public class BookTourService {
 			    bookTour.setStatus(Constant.STATUS.CONFIMRED);
 				bookTourRepository.save(bookTour);
 //		send notification
+				Notification notification = new Notification();
+				notification.setUsername(bookTour.getAccount().getUsername());
+				notification.setTitle("Thông báo xác nhận đặt tour");
+				notification.setContent("Hệ thông Travel xin thông báo đơn đặt tour vỡi mã "+bookTour.getCode() +" đã được xác nhận. Qúy khách hàng vui lòng thanh toán để hoàn tất quy trình đặt tour. Xin trân trọng cảm ơn.");
+				this.notificationService.sendNotifcationToUser(notification.getUsername(),notification);
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 				responMessage.setData(bookTour.toModel());
@@ -159,6 +182,11 @@ public class BookTourService {
 			} else {
 			    bookTour.setStatus(Constant.STATUS.PAID);
 				bookTourRepository.save(bookTour);
+				Notification notification = new Notification();
+				notification.setUsername(bookTour.getAccount().getUsername());
+				notification.setTitle("Thông báo thanh toán  đặt tour");
+				notification.setContent("Hệ thông Travel xin thông báo đơn đặt tour vỡi mã "+bookTour.getCode() +" đã được thanh toán. Qúy khách hàng vui lòng thường xuyên kiểm tra điện thoại để nhận được hướng dẫn và thông tin chi tiết. Xin trân trọng cảm ơn.");
+				this.notificationService.sendNotifcationToUser(notification.getUsername(),notification);
 				tourTripService.addTourTripToAccount(bookTour.getAccount().getUsername(),bookTour.getTourTripCode());
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
@@ -189,5 +217,7 @@ public class BookTourService {
 		}
 		return responMessage;
 	}
+
+
 
 }

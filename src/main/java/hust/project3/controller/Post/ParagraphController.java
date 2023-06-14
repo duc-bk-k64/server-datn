@@ -40,7 +40,7 @@ public class ParagraphController {
 		return paragraphService.findByPostId(postId);
 	}
 	
-	@PutMapping("/paragraph/update")
+	@PostMapping("/paragraph/update")
 	@ResponseBody
 	public ResponMessage update(@RequestBody ParagraphUpdate data,@RequestParam Long postId) {
 		return paragraphService.updateList(postId,data.getDeleteId(), data.getUpdate());
