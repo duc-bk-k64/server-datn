@@ -16,6 +16,8 @@ public class Constant {
 
 		public static final String ONTRIP = "ontrip";
 
+		public static final String CANCEL = "cancel";
+
 		public static final String FINISH = "finish";
 	}
 

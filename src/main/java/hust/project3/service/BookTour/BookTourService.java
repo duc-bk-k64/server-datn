@@ -6,8 +6,10 @@ import java.util.HashSet;
 import java.util.Set;
 
 import hust.project3.Utils.GenerateCode;
+import hust.project3.entity.Money.Bill;
 import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TourTrip;
+import hust.project3.repository.Money.BillRepository;
 import hust.project3.service.NotificationService;
 import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +36,8 @@ public class BookTourService {
 
 	@Autowired
 	private NotificationService notificationService;
+	@Autowired
+	private BillRepository billRepository;
 
 	public ResponMessage create(String username, BookTour bookTour) {
 		ResponMessage responMessage = new ResponMessage();
@@ -191,7 +195,19 @@ public class BookTourService {
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 				responMessage.setData(bookTour.toModel());
-//				send notification
+//				add bill to user
+				Bill bill = new Bill();
+				bill.setTotalMoney(bookTour.getMoneyToPay());
+				bill.setStatus(Constant.STATUS.CONFIMRED);
+				bill.setAccount(bookTour.getAccount());
+				bill.setTimeCreated(Instant.now());
+				bill.setContent("Thanh toán cho đơn đặt tour "+ bookTour.getCode()+" của quý khách đã được xác nhận.");
+				String code = GenerateCode.generateCode();
+				while (billRepository.existsByCode(code)) {
+					code =GenerateCode.generateCode();
+				}
+				bill.setCode(code);
+				billRepository.save(bill);
 			}
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);

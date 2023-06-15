@@ -1,18 +1,25 @@
 package hust.project3.service.Tour;
 
 import java.text.ParseException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Account;
+import hust.project3.entity.BookTour.BookTour;
+import hust.project3.entity.Money.Refund;
+import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TripPitstop;
 import hust.project3.model.AccountModel;
 import hust.project3.model.Tour.TourTripInfor;
 import hust.project3.model.Tour.TourTripModel;
 import hust.project3.repository.AccountRepository;
+import hust.project3.repository.BookTour.BookTourRepository;
+import hust.project3.repository.Money.RefundRepository;
 import hust.project3.repository.Tour.TripPitstopRepository;
+import hust.project3.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +41,15 @@ public class TourTripService {
     private AccountRepository accountRepository;
     @Autowired
     private TripPitstopRepository tripPitstopRepository;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Autowired
+    private BookTourRepository bookTourRepository;
+
+    @Autowired
+    private RefundRepository refundRepository;
 
     public ResponMessage createList(List<TourTripModel> tourTrips, Long tourId) {
         ResponMessage responMessage = new ResponMessage();
@@ -298,11 +314,95 @@ public class TourTripService {
                 responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
                 responMessage.setMessage("TourTrip not found");
             } else {
-                tourTrip.setStatus(Constant.STATUS.ONTRIP);
+                if(tourTrip.getStatus().equals(Constant.STATUS.CONFIMRED)) {
+                    tourTrip.setStatus(Constant.STATUS.ONTRIP);
+                    responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+                    responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+                    responMessage.setData(tourTripRepository.save(tourTrip).toModel());
+                } else {
+                    responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                    responMessage.setMessage("Chuyến đi chưa được xác nhận");
+                }
+            }
+        } catch (Exception e) {
+            responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+            responMessage.setMessage(e.getMessage());
+        }
+        return responMessage;
+    }
+    public ResponMessage confirmTrip(Long id) {
+        ResponMessage responMessage = new ResponMessage();
+        try {
+            TourTrip tourTrip = tourTripRepository.findTripById(id);
+            if (tourTrip == null) {
+                responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                responMessage.setMessage("TourTrip not found");
+            } else {
 
+                    tourTrip.setStatus(Constant.STATUS.CONFIMRED);
+                    responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+                    responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+                    responMessage.setData(tourTripRepository.save(tourTrip).toModel());
+
+            }
+        } catch (Exception e) {
+            responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+            responMessage.setMessage(e.getMessage());
+        }
+        return responMessage;
+    }
+
+    public ResponMessage cancelTrip(Long id) {
+        ResponMessage responMessage = new ResponMessage();
+        try {
+            TourTrip tourTrip = tourTripRepository.findTripById(id);
+            if (tourTrip == null) {
+                responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                responMessage.setMessage("TourTrip not found");
+            } else if(tourTrip.getStatus().equals(Constant.STATUS.CANCEL)) {
+                responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                responMessage.setMessage("Không thể hủy chuyến đi");
+            }
+            else {
+
+                tourTrip.setStatus(Constant.STATUS.CANCEL);
                 responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
                 responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+
+//                send notification
+                tourTrip.getAccount().forEach(e -> {
+                    Notification notification = new Notification();
+                    notification.setTitle("Thông báo hủy chuyến đi");
+                    notification.setContent("Hệ thông Travel xin thông báo chuyến đi vỡi mã "+ tourTrip.getCode() +" đã bị hủy. Xin lỗi quý khách hàng vì sự bất tiện này. Xin cảm ơn quý khách đã tin tưởng sử dụng dịch vụ của Travel.");
+                    notification.setUsername(e.getUsername());
+                    try {
+                        notificationService.sendNotifcationToUser(e.getUsername(),notification);
+                    } catch (Exception ex) {
+                        throw new RuntimeException(ex);
+                    }
+
+                });
+//                create refund
+                List<BookTour> bookTours = bookTourRepository.findByTourTripCode(tourTrip.getCode());
+                bookTours.forEach( e -> {
+                    if(e.getStatus().equals(Constant.STATUS.PAID)) {
+                        Refund refund = new Refund();
+                        refund.setStatus(Constant.STATUS.UN_CONFIMRED);
+                        refund.setTotalMoney(e.getMoneyToPay());
+                        refund.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy.");
+                        refund.setTimeCreated(Instant.now());
+                        refund.setAccount(e.getAccount());
+                        String code = GenerateCode.generateCode();
+                        while (refundRepository.existsByCode(code)) {
+                            code = GenerateCode.generateCode();
+                        }
+                        refund.setCode(code);
+                        refundRepository.save(refund);
+                    }
+                });
+
                 responMessage.setData(tourTripRepository.save(tourTrip).toModel());
+
             }
         } catch (Exception e) {
             responMessage.setResultCode(Constant.RESULT_CODE.ERROR);

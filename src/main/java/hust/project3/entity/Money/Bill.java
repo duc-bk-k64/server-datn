@@ -12,7 +12,10 @@ import javax.persistence.ManyToOne;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Account;
+import hust.project3.model.Money.BillModel;
+import hust.project3.model.Money.RefundModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -40,5 +43,16 @@ public class Bill {
     @JoinColumn(name = "account_id") 
 	@JsonIgnore
 	private Account account;
+
+	public BillModel toModel() {
+		BillModel refundModel = new BillModel();
+		refundModel.setCode(code);
+		refundModel.setContent(content);
+		refundModel.setId(id);
+		refundModel.setTotalMoney(totalMoney);
+		refundModel.setStatus(status);
+		refundModel.setTimeCreated(DateUtils.Instant2String(timeCreated));
+		return  refundModel;
+	}
 
 }

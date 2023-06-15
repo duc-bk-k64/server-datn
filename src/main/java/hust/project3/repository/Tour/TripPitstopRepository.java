@@ -5,9 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
-
 @Repository
 public interface TripPitstopRepository extends JpaRepository<TripPitstop, Long> {
     @Query(value = "SELECT  * FROM  trip_pitstop where trip_code = :tripCode " ,nativeQuery = true)

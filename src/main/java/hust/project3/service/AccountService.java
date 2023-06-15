@@ -2,12 +2,11 @@ package hust.project3.service;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
-import hust.project3.entity.Role;
+import hust.project3.Utils.GenerateCode;
+import hust.project3.entity.*;
+import hust.project3.model.AccountDTO;
 import hust.project3.model.AccountModel;
 import hust.project3.model.ResponMessage;
 import hust.project3.repository.RoleRepository;
@@ -16,8 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import hust.project3.common.Constant;
-import hust.project3.entity.Account;
-import hust.project3.entity.Profile;
 import hust.project3.model.ProfileModel;
 import hust.project3.repository.AccountRepository;
 import hust.project3.repository.ProfileRepository;
@@ -120,6 +117,178 @@ public class AccountService {
 		}
 
 	}
+	public ResponMessage createAccount(AccountDTO signUp) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			if (accountRepository.existsByUsername(signUp.getUsername())) {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.USERNAME_EXIST);
+				return responMessage;
+
+			} else if (accountRepository.existsByEmail(signUp.getEmail())) {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.EMAIL_EXIST);
+				return responMessage;
+			} else {
+				Account account = new Account();
+
+				account.setStatus(Constant.STATUS.DE_ACTIVE);
+				account.setUsername(signUp.getUsername());
+				account.setPassword(passwordEncoder.encode(signUp.getPassword()));
+				account.setProvider(Provider.LOCAL);
+				Set<Role> roles = new HashSet<>();
+				if(signUp.getRole() == null) {
+					responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+					responMessage.setMessage("Role is null");
+					return  responMessage;
+				}
+				Role role = roleRepository.findByName(signUp.getRole());
+				roles.add(role);
+				account.setRoles(roles);
+				account.setEmail(signUp.getEmail());
+				String token = generateToken();
+				while (accountRepository.existsByCode(token)) {
+					token =generateToken();
+				}
+				account.setName(signUp.getName());
+				account.setCode(token);
+				accountRepository.save(account);
+				sendMailActiveAccount(token, signUp.getEmail());
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+				responMessage.setData(account);
+				return responMessage;
+			}
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+	public ResponMessage changeRole(String username,String role) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			Account account = accountRepository.findUserByUsername(username);
+			if(account == null) {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.NOT_FOUND_USER);
+			} else {
+				Role roles = roleRepository.findByName(role);
+				Set<Role> set = new HashSet<>();
+				set.add(roles);
+				account.setRoles(set);
+				accountRepository.save(account);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+			}
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+	public ResponMessage activeStatus(String username) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			Account account = accountRepository.findUserByUsername(username);
+			if(account == null) {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.NOT_FOUND_USER);
+			} else {
+				account.setStatus(Constant.STATUS.ACTIVE);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+				responMessage.setData(accountRepository.save(account).toDTO());
+			}
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+	public ResponMessage deactiveStatus(String username) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			Account account = accountRepository.findUserByUsername(username);
+			if(account == null) {
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage(Constant.MESSAGE.NOT_FOUND_USER);
+			} else {
+				account.setStatus(Constant.STATUS.DE_ACTIVE);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+				responMessage.setData(accountRepository.save(account).toDTO());
+			}
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+	public ResponMessage deleteAccount(String username) {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			    Account account = accountRepository.findUserByUsername(username);
+				account.setRoles(null);
+				account = accountRepository.save(account);
+				Thread.sleep(1000);
+				accountRepository.delete(account);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+	public ResponMessage findAll() {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			List<AccountDTO> list = new ArrayList<>();
+			accountRepository.findAll().forEach(e -> {
+				AccountDTO accountDTO  = e.toDTO();
+				if(e.getRoles().size()!=0)
+				   accountDTO.setRole(e.getRoles().iterator().next().getName());
+				list.add(accountDTO);
+			});
+			responMessage.setData(list);
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+			System.out.println(e.getMessage());
+		}
+		return responMessage;
+	}
+
+	public ResponMessage findAllRole() {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+
+			List<Role> roles = new ArrayList<>();
+			roleRepository.findAll().forEach(e -> {
+				e.setAccount(null);
+				roles.add(e);
+			});
+			responMessage.setData(roles);
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+
 
 	public Profile getProfile(String username) {
 		Account account = accountRepository.findUserByUsername(username);

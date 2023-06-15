@@ -25,6 +25,7 @@ import hust.project3.entity.CustomerCare.ThreadMessage;
 import hust.project3.entity.Money.Bill;
 import hust.project3.entity.Money.Refund;
 import hust.project3.entity.Tour.TourTrip;
+import hust.project3.model.AccountDTO;
 import hust.project3.model.AccountModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -109,6 +110,20 @@ public class Account {
 		accountModel.setUsername(username);
 		accountModel.setEmail(email);
 		return accountModel;
+	}
+
+	public AccountDTO toDTO() {
+		AccountDTO account = new AccountDTO();
+		account.setId(id);
+		account.setUsername(username);
+//		account.setPassword(password);
+		account.setStatus(status);
+		account.setTokenForgotPassword(tokenForgotPassword);
+		account.setEmail(email);
+		account.setCode(code);
+		account.setName(name);
+		account.setProvider(String.valueOf(provider));
+		return  account;
 	}
 
 

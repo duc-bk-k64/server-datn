@@ -18,4 +18,6 @@ public class TripPitstop {
     private  Long pitstopId;
     @Column
     private  String status;
+    @Column
+    private  String note;
 }

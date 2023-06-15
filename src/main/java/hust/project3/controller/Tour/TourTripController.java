@@ -48,6 +48,20 @@ public class TourTripController {
         return tourTripService.addTourguide(tripId,username);
     }
 
+    @GetMapping("/trip/confirmTrip")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_STAFF')")
+    public  ResponMessage confirmTrip(@RequestParam Long tripId) {
+        return tourTripService.confirmTrip(tripId);
+    }
+
+    @GetMapping("/trip/cancelTrip")
+    @ResponseBody
+    @PreAuthorize("hasRole('ROLE_STAFF')")
+    public  ResponMessage cancelTrip(@RequestParam Long tripId) {
+        return tourTripService.cancelTrip(tripId);
+    }
+
 
     @PutMapping("/trip/update")
     @PreAuthorize("hasRole('ROLE_STAFF')")
