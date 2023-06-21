@@ -10,6 +10,7 @@ import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Account;
 import hust.project3.entity.BookTour.BookTour;
 import hust.project3.entity.Money.Refund;
+import hust.project3.entity.Money.Transaction;
 import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TripPitstop;
 import hust.project3.model.AccountModel;
@@ -18,6 +19,7 @@ import hust.project3.model.Tour.TourTripModel;
 import hust.project3.repository.AccountRepository;
 import hust.project3.repository.BookTour.BookTourRepository;
 import hust.project3.repository.Money.RefundRepository;
+import hust.project3.repository.Money.TransactionRepository;
 import hust.project3.repository.Tour.TripPitstopRepository;
 import hust.project3.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,6 +52,8 @@ public class TourTripService {
 
     @Autowired
     private RefundRepository refundRepository;
+
+    @Autowired private TransactionRepository transactionRepository;
 
     public ResponMessage createList(List<TourTripModel> tourTrips, Long tourId) {
         ResponMessage responMessage = new ResponMessage();
@@ -397,6 +401,16 @@ public class TourTripService {
                             code = GenerateCode.generateCode();
                         }
                         refund.setCode(code);
+
+                        Transaction transaction = new Transaction();
+                        transaction.setCode(code);
+                        transaction.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy.");
+                        transaction.setStatus(Constant.STATUS.CONFIMRED);
+                        transaction.setTimeCreated(Instant.now());
+                        transaction.setType(Constant.TYPE.OUT);
+                        transaction.setCreatedBy("SYSTEM");
+                        transaction.setTotalMoney(e.getMoneyToPay());
+                        transactionRepository.save(transaction);
                         refundRepository.save(refund);
                     }
                 });

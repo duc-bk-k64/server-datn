@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Entity
 @Getter
 @Setter
@@ -24,6 +26,8 @@ public class Reply {
 	private String content;
 	@Column(nullable = false)
 	private String createdBy;
+	@Column
+	private Instant timeCreated;
 	
 	@JsonIgnore
 	@ManyToOne 

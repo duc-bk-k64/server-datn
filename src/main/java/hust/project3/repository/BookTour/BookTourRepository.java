@@ -14,6 +14,9 @@ public interface BookTourRepository extends JpaRepository<BookTour,Long> {
 	@Query(value = "SELECT * FROM book_tour  WHERE id = :id", nativeQuery = true)
 	BookTour findBookTourById(@Param("id") Long id);
 
+	@Query(value = "SELECT  *FROM book_tour WHERE  time_create > (NOW() - INTERVAL 1 DAY )", nativeQuery = true)
+	List<BookTour> findAllInOneDay();
+
 	@Query(value = "SELECT * FROM book_tour  WHERE status = :status", nativeQuery = true)
 	List<BookTour> findBookTourByStatus(@Param("status") String status);
 

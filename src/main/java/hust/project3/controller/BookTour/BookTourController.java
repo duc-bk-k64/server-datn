@@ -73,6 +73,13 @@ public class BookTourController {
 	public ResponMessage findAll() {
 		return bookTourService.getAll();
 	}
+
+	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@GetMapping("booktour/totalOneDay")
+	@ResponseBody
+	public ResponMessage totalInOneDay() {
+		return bookTourService.findAllInOneDay();
+	}
 	
 	@PreAuthorize("hasRole('ROLE_STAFF')")
 	@DeleteMapping("/booktour/deleteById")

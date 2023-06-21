@@ -28,6 +28,9 @@ public class ThreadMessage {
 	@Column
 	private String title;
 
+	@Column
+	private  String status;
+
 	@OneToMany(mappedBy = "thread", cascade = CascadeType.ALL)
 	private Set<Question> questions;
 

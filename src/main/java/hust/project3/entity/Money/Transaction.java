@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import hust.project3.Utils.DateUtils;
+import hust.project3.model.Money.TransactionModel;
 import lombok.Getter;
 import lombok.Setter;
 @Entity
@@ -32,5 +34,18 @@ public class Transaction {
 	private Instant timeCreated;
 	@Column
 	private String type;
+
+	public TransactionModel toModel() {
+		TransactionModel transaction = new TransactionModel();
+		transaction.setTotalMoney(totalMoney);
+		transaction.setType(type);
+		transaction.setStatus(status);
+		transaction.setContent(content);
+		transaction.setTimeCreated(DateUtils.Instant2String(timeCreated));
+		transaction.setCode(code);
+		transaction.setCreatedBy(createdBy);
+		transaction.setId(id);
+		return  transaction;
+	}
 
 }

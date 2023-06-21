@@ -13,6 +13,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Entity
 @Getter
 @Setter
@@ -22,6 +24,8 @@ public class Question {
 	private Long id;
 	@Column(nullable = false)
 	private String content;
+	@Column
+	private Instant timeCreated;
 
 	@ManyToOne 
     @JoinColumn(name = "thread_id") 

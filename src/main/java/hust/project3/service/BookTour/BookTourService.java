@@ -7,9 +7,11 @@ import java.util.Set;
 
 import hust.project3.Utils.GenerateCode;
 import hust.project3.entity.Money.Bill;
+import hust.project3.entity.Money.Transaction;
 import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TourTrip;
 import hust.project3.repository.Money.BillRepository;
+import hust.project3.repository.Money.TransactionRepository;
 import hust.project3.service.NotificationService;
 import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +40,9 @@ public class BookTourService {
 	private NotificationService notificationService;
 	@Autowired
 	private BillRepository billRepository;
+
+	@Autowired
+	private TransactionRepository transactionRepository;
 
 	public ResponMessage create(String username, BookTour bookTour) {
 		ResponMessage responMessage = new ResponMessage();
@@ -206,6 +211,17 @@ public class BookTourService {
 				while (billRepository.existsByCode(code)) {
 					code =GenerateCode.generateCode();
 				}
+
+				Transaction transaction = new Transaction();
+				transaction.setCode(code);
+				transaction.setContent("Thanh toán cho đơn đặt tour "+ bookTour.getCode());
+				transaction.setStatus(Constant.STATUS.CONFIMRED);
+				transaction.setTimeCreated(Instant.now());
+				transaction.setType(Constant.TYPE.IN);
+				transaction.setCreatedBy("SYSTEM");
+				transaction.setTotalMoney(bookTour.getMoneyToPay());
+				transactionRepository.save(transaction);
+
 				bill.setCode(code);
 				billRepository.save(bill);
 			}
@@ -233,6 +249,22 @@ public class BookTourService {
 		}
 		return responMessage;
 	}
+	public ResponMessage findAllInOneDay() {
+		ResponMessage responMessage = new ResponMessage();
+		try {
+			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+
+			responMessage.setData(bookTourRepository.findAllInOneDay().size());
+
+		} catch (Exception e) {
+			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+			responMessage.setMessage(e.getMessage());
+		}
+		return responMessage;
+	}
+
+
 
 
 
