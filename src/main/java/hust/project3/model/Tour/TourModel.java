@@ -4,6 +4,8 @@ import hust.project3.entity.Tour.Tour;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.Instant;
+
 @Getter
 @Setter
 public class TourModel {
@@ -16,6 +18,8 @@ public class TourModel {
 	private String departure;
 	private String imageUrl;
 	private String status;
+
+//	private String timeCreated;
 	
 	public Tour toObject() {
 		Tour tour = new Tour();

@@ -60,7 +60,7 @@ public class BookTourController {
 		return bookTourService.getByUsername(username);
 	}
 	
-	@PreAuthorize("hasRole('ROLE_STAFF')")
+	@PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_TOURGUIDE')")
 	@GetMapping("/booktour/findByTourTripCode")
 	@ResponseBody
 	public ResponMessage findByTourTripCode(@RequestParam String tourTripCode) {

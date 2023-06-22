@@ -115,9 +115,16 @@ public class TourTripController {
         return tourTripService.findPitstopStatus(tripCode);
     }
     @PreAuthorize("hasRole('ROLE_TOURGUIDE')")
-    @GetMapping("/trip/pitstop/confirm")
+    @PostMapping("/trip/pitstop/confirm")
     @ResponseBody
-    public  ResponMessage confirmPitstop(@RequestParam Long tripPitstopId) {
-        return tourTripService.confirmPitstop(tripPitstopId);
+    public  ResponMessage confirmPitstop(@RequestParam Long tripPitstopId,@RequestBody String note) {
+        return tourTripService.confirmPitstop(tripPitstopId,note);
+    }
+
+    @PreAuthorize("hasRole('ROLE_TOURGUIDE')")
+    @PostMapping("/trip/pitstop/cancel")
+    @ResponseBody
+    public  ResponMessage cancelPitstop(@RequestParam Long tripPitstopId,@RequestBody String note) {
+        return tourTripService.cancelPitstop(tripPitstopId,note);
     }
 }

@@ -44,6 +44,7 @@ public class QuestionService {
             Notification notification = new Notification();
             notification.setUsername("SYSTEM");
             notification.setTitle("Có yêu cầu hỗ trợ từ khách hàng");
+            notification.setContent(question.getContent());
 //            notification.setContent("Hệ thông Travel xin thông báo đơn đặt tour vỡi mã "+bookTour.getCode() +" đã được thanh toán. Qúy khách hàng vui lòng thường xuyên kiểm tra điện thoại để nhận được hướng dẫn và thông tin chi tiết. Xin trân trọng cảm ơn.");
             notificationService.sendToStaff(notification);
         } catch (Exception e) {

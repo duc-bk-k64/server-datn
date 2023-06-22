@@ -459,11 +459,28 @@ public class TourTripService {
         return responMessage;
     }
 
-    public ResponMessage confirmPitstop(Long tripPitstopId) {
+    public ResponMessage confirmPitstop(Long tripPitstopId,String note) {
         ResponMessage responMessage = new ResponMessage();
         try {
             TripPitstop tripPitsop = tripPitstopRepository.findTripPitstopById(tripPitstopId);
+            tripPitsop.setNote(note);
             tripPitsop.setStatus(Constant.STATUS.CONFIMRED);
+            responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+            responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+            responMessage.setData(tripPitstopRepository.save(tripPitsop));
+        } catch (Exception e) {
+            responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+            responMessage.setMessage(e.getMessage());
+        }
+        return responMessage;
+    }
+
+    public ResponMessage cancelPitstop(Long tripPitstopId,String note) {
+        ResponMessage responMessage = new ResponMessage();
+        try {
+            TripPitstop tripPitsop = tripPitstopRepository.findTripPitstopById(tripPitstopId);
+            tripPitsop.setStatus(Constant.STATUS.CANCEL);
+            tripPitsop.setNote(note);
             responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
             responMessage.setMessage(Constant.MESSAGE.SUCCESS);
             responMessage.setData(tripPitstopRepository.save(tripPitsop));

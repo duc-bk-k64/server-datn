@@ -1,5 +1,6 @@
 package hust.project3.entity.Tour;
 
+import java.time.Instant;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -16,6 +17,7 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import hust.project3.Utils.DateUtils;
 import hust.project3.model.Tour.TourModel;
 import lombok.Getter;
 import lombok.Setter;
@@ -42,6 +44,8 @@ public class Tour {
 	private String imageUrl;
 	@Column
 	private String status;
+//	@Column
+//	private Instant timeCreated;
 	
 	@OneToMany(mappedBy = "tour", cascade = CascadeType.ALL)
 	private Set<TourTrip> tourTrips;
@@ -70,6 +74,7 @@ public class Tour {
 		tour.setNumberOfDay(numberOfDay);
 		tour.setNumberOfNight(numberOfNight);
 		tour.setStatus(status);
+//		tour.setTimeCreated(DateUtils.Instant2String(timeCreated));
 		return tour;
 
 	}
