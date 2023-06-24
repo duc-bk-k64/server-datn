@@ -22,6 +22,9 @@ public interface BookTourRepository extends JpaRepository<BookTour,Long> {
 
 	@Query(value = "SELECT * FROM book_tour  order by  time_create desc ", nativeQuery = true)
 	List<BookTour> findAllBooktour();
+
+	@Query(value = "SELECT * FROM book_tour  where status = 'unconfimred' and time_create <  (NOW() - INTERVAL 3 DAY ) ", nativeQuery = true)
+	List<BookTour> findAllBooktourNeedAlert();
 	
 	List<BookTour> findByTourTripCode(String tourTripCode);
 

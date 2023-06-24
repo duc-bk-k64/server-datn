@@ -6,11 +6,17 @@ import java.util.*;
 
 import hust.project3.Utils.GenerateCode;
 import hust.project3.entity.*;
+import hust.project3.entity.BookTour.BookTour;
+import hust.project3.entity.Tour.TourTrip;
 import hust.project3.model.AccountDTO;
 import hust.project3.model.AccountModel;
 import hust.project3.model.ResponMessage;
+import hust.project3.repository.BookTour.BookTourRepository;
 import hust.project3.repository.RoleRepository;
+import hust.project3.repository.Tour.TourTripRepository;
+import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +39,47 @@ public class AccountService {
 
 	@Autowired
 	private RoleRepository roleRepository;
+
+	@Autowired
+	private BookTourRepository bookTourRepository;
+	@Autowired
+	private TourTripRepository tourTripRepository;
+
+	@Autowired
+	private  NotificationService notificationService;
+//	@Scheduled(cron = "0 0/1 * * * *") //per 1 minutes
+    @Scheduled(cron = "0 0 8 * * MON-FRI")
+	public void sendAlert() throws Exception {
+		List<BookTour> bookTours = bookTourRepository.findAllBooktourNeedAlert();
+		List<TourTrip> tourTrips = tourTripRepository.findTripNeedAlert();
+		System.out.println("Size booktour"+bookTours.size());
+		if(bookTours.size() != 0 ) {
+			Notification notification = new Notification();
+			notification.setStatus(Constant.STATUS.UNREAD);
+			notification.setTitle("Đơn đặt tour chưa được xác nhận");
+			notification.setUsername("SYSTEM");
+			StringBuilder content = new StringBuilder("Các đơn đặt tour:  ");
+			bookTours.forEach(e -> {
+				content.append(e.getCode()+", ");
+			});
+			content.append("chưa được xác nhận. Nhân viên vui lòng kiểm tra.");
+			notification.setContent(content.toString());
+			notificationService.sendToStaff(notification);
+		}
+		if(tourTrips.size() != 0 ) {
+			Notification notification = new Notification();
+			notification.setStatus(Constant.STATUS.UNREAD);
+			notification.setTitle("Chuyến đi chưa được chốt");
+			notification.setUsername("SYSTEM");
+			StringBuilder content = new StringBuilder("Các chuyến đi:  ");
+			tourTrips.forEach(e -> {
+				content.append(e.getCode()+", ");
+			});
+			content.append("chưa được chốt. Nhân viên vui lòng kiểm tra");
+			notification.setContent(content.toString());
+			notificationService.sendToStaff(notification);
+		}
+	}
 
 	public String forgotPassword(String username) throws Exception {
 		Account account = accountRepository.findUserByUsername(username);

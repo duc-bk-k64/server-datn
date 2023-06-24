@@ -27,4 +27,7 @@ public interface TourTripRepository extends JpaRepository<TourTrip,Long> {
 	@Query(value = "SELECT * FROM tour_trip where tour_guide = :username order by departure_day desc", nativeQuery = true)
 	List<TourTrip> findTripByTourGuide(@Param("username") String username);
 
+	@Query(value = "SELECT * FROM tour_trip where status = 'available' and departure_day <  (NOW() + INTERVAL 5 DAY )", nativeQuery = true)
+	List<TourTrip> findTripNeedAlert();
+
 }

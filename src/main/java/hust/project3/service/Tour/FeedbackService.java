@@ -6,14 +6,19 @@ import hust.project3.entity.Tour.FeedBack;
 import hust.project3.entity.Tour.Tour;
 import hust.project3.entity.Tour.TourTrip;
 import hust.project3.model.ResponMessage;
+import hust.project3.model.Tour.FeedbackModel;
 import hust.project3.repository.Tour.FeedbackRepository;
 import hust.project3.repository.Tour.TourRepository;
 import hust.project3.repository.Tour.TourTripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class FeedbackService {
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private FeedbackRepository feedbackRepository;
     @Autowired
@@ -35,7 +40,12 @@ public class FeedbackService {
                     feedBack.setTour(tour);
                     responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
                     responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-                    responMessage.setData(feedbackRepository.save(feedBack));
+                    feedBack = feedbackRepository.save(feedBack);
+                    responMessage.setData(feedBack);
+                    FeedbackModel feedbackModel = new FeedbackModel();
+                    feedbackModel.setId(feedBack.getId());
+                    feedbackModel.setContent(feedBack.getContent());
+                    kafkaTemplate.send("feedbackDATN",feedbackModel);
                 }
                 else {
                     responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
@@ -82,6 +92,10 @@ public class FeedbackService {
             responMessage.setMessage(e.getMessage());
         }
         return responMessage;
+    }
+    @KafkaListener(id = "notification", topics = "feedbackDATN")
+    public void checkFeedback(FeedbackModel feedBack) {
+        System.out.println(feedBack.getContent());
     }
 
 }
