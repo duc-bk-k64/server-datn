@@ -15,12 +15,13 @@ import hust.project3.model.ResponMessage;
 import hust.project3.repository.Post.PostRepository;
 import hust.project3.repository.Tour.TourDestinationRepository;
 @Service
+//@CacheConfig(cacheNames = {"post"})
 public class PostService {
 	@Autowired
 	private PostRepository postRepository;
 	@Autowired
 	private TourDestinationRepository tourDestinationRepository;
-	
+//	@CacheEvict(key = "#desId", value = "responMessage")
 	public ResponMessage create(Post post, Long desId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -71,7 +72,8 @@ public class PostService {
 		}
 		return responMessage;
 	}
-	
+
+//	@Cacheable(value = "responMessage", key = "#id")
 	public ResponMessage findByDestination(Long id) {
 		ResponMessage responMessage = new ResponMessage();
 		try {

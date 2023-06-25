@@ -10,6 +10,9 @@ import hust.project3.entity.Tour.TourTrip;
 import hust.project3.model.Tour.FindTourModel;
 import hust.project3.model.Tour.TourModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import hust.project3.Utils.GenerateCode;
@@ -21,6 +24,7 @@ import hust.project3.repository.Tour.TourDestinationRepository;
 import hust.project3.repository.Tour.TourRepository;
 
 @Service
+//@CacheConfig(cacheNames = {"tour"})
 public class TourService {
 	@Autowired
 	private TourRepository tourRepository;
@@ -85,6 +89,7 @@ public class TourService {
 		return responMessage;
 	}
 
+//	@CacheEvict(key = "#tourId", value = "responMessage")
 	public ResponMessage update(Tour tour, Long tourId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -104,7 +109,7 @@ public class TourService {
 		}
 		return responMessage;
 	}
-
+//	@CacheEvict(key = "#tourId", value = "responMessage")
 	public ResponMessage openTour( Long tourId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -121,6 +126,7 @@ public class TourService {
 		return responMessage;
 	}
 
+//	@CacheEvict(key = "#tourId", value = "responMessage")
 	public ResponMessage closeTour( Long tourId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -136,19 +142,21 @@ public class TourService {
 		}
 		return responMessage;
 	}
+//	@Cacheable(value = "responMessage", key = "#id")
 	public ResponMessage findById(Long id) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			responMessage.setData(tourRepository.findTourById(id).toModel());
+			System.out.println("No cache");
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 			responMessage.setMessage(e.getMessage());
 		}
 		return responMessage;
 	}
-
+//	@CacheEvict(key = "#tourId", value = "responMessage")
 	public ResponMessage deleteById(Long id) {
 		ResponMessage responMessage = new ResponMessage();
 		try {

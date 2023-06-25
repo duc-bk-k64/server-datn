@@ -3,6 +3,9 @@ package hust.project3.service.Post;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import hust.project3.common.Constant;
@@ -13,12 +16,13 @@ import hust.project3.repository.Post.ParagraphRepository;
 import hust.project3.repository.Post.PostRepository;
 
 @Service
+@CacheConfig(cacheNames = {"paragraph"})
 public class ParagraphService {
 	@Autowired
 	private ParagraphRepository paragraphRepository;
 	@Autowired
 	private PostRepository postRepository;
-	
+	@CacheEvict(key = "#postId", value = "responMessage")
 	public ResponMessage createList(Long postId,List<Paragraph> paragraphs) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -41,6 +45,7 @@ public class ParagraphService {
 		}
 		return responMessage;
 	}
+	@Cacheable(value = "responMessage", key = "#postId")
 	public ResponMessage findByPostId(Long postId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -48,13 +53,15 @@ public class ParagraphService {
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 				responMessage.setData(paragraphRepository.findByPostId(postId));
+//				System.out.println("no cache");
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 			responMessage.setMessage(e.getMessage());
 		}
 		return responMessage;
 	}
-	
+
+	@CacheEvict(key = "#postId", value = "responMessage")
 	public ResponMessage updateList(Long postId,List<Long> deleteId,List<Paragraph> update) {
 		ResponMessage responMessage = new ResponMessage();
 		try {

@@ -9,12 +9,16 @@ import hust.project3.repository.Tour.PitStopRepository;
 import hust.project3.repository.Tour.TourRepository;
 import hust.project3.repository.Tour.TourTripRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = {"pitstop"})
 public class PitstopService {
     @Autowired
     private PitStopRepository pitStopRepository;
@@ -23,7 +27,7 @@ public class PitstopService {
 
     @Autowired
     private TourTripRepository tourTripRepository;
-
+    @CacheEvict(key = "#tourId", value = "responMessage")
     public ResponMessage createList(List<PitStopModel> pitStops, Long tourId) {
         ResponMessage responMessage = new ResponMessage();
         try {
@@ -48,6 +52,7 @@ public class PitstopService {
         }
         return responMessage;
     }
+    @Cacheable(value = "responMessage", key = "#tourId")
     public ResponMessage findByTourId(Long tourId) {
         ResponMessage responMessage = new ResponMessage();
         try {
@@ -59,13 +64,14 @@ public class PitstopService {
                     pitStopModels.add(e.toModel());
                 });
                 responMessage.setData(pitStopModels);
+//                System.out.println("no cache");
         } catch (Exception e) {
             responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
             responMessage.setMessage(e.getMessage());
         }
         return responMessage;
     }
-
+    @CacheEvict(key = "#tourId", value = "responMessage")
     public ResponMessage updateList(List<PitStopModel> pitStops, Long tourId,List<Long> deleteId) {
         ResponMessage responMessage = new ResponMessage();
         try {

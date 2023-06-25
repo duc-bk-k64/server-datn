@@ -60,6 +60,12 @@ public class Project3Application {
 	}
 
 	@Bean
+	NewTopic staff() {
+		return new NewTopic("notificationStaffDATN",2,(short) 1);
+
+	}
+
+	@Bean
 	JsonMessageConverter converter() {
 		return new JsonMessageConverter();
 	}
