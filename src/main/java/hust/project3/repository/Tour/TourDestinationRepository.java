@@ -14,6 +14,8 @@ public interface TourDestinationRepository extends JpaRepository<Destination, Lo
 	@Query(value = "SELECT * FROM destination where id = :id",nativeQuery = true)
 	Destination findDesById(@Param("id") Long id);
 
+	Boolean existsByName(String name);
+
 	@Query(value = "SELECT  * FROM destination where  id in (SELECT destination_id FROM tour_destination where tour_id = :tourId)", nativeQuery = true)
 	List<Destination> findByTourId(@Param("tourId") Long tourId);
 

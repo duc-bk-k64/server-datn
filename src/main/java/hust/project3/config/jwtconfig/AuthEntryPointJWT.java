@@ -28,6 +28,9 @@ public class AuthEntryPointJWT implements AuthenticationEntryPoint {
 			AuthenticationException authException) throws IOException, ServletException {
 		logger.error("Unauthorized error: {}", authException.getMessage());
 		response.sendRedirect("/api/v1/project/auth/authFail");
+//		response.setContentType("application/json;charset=UTF-8");
+//		response.setStatus(200);
+//		response.getWriter("{resultCode:-1}");
 
 	}
 

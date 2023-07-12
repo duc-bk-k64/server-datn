@@ -52,7 +52,7 @@ public class AccountService {
 	public void sendAlert() throws Exception {
 		List<BookTour> bookTours = bookTourRepository.findAllBooktourNeedAlert();
 		List<TourTrip> tourTrips = tourTripRepository.findTripNeedAlert();
-		System.out.println("Size booktour"+bookTours.size());
+//		System.out.println("Size booktour "+bookTours.size());
 		if(bookTours.size() != 0 ) {
 			Notification notification = new Notification();
 			notification.setStatus(Constant.STATUS.UNREAD);
@@ -73,13 +73,22 @@ public class AccountService {
 			notification.setUsername("SYSTEM");
 			StringBuilder content = new StringBuilder("Các chuyến đi:  ");
 			tourTrips.forEach(e -> {
-				content.append(e.getCode()+", ");
+				content.append(e.getCode()+" tour "+e.getTour().getName()+", ");
 			});
 			content.append("chưa được chốt. Nhân viên vui lòng kiểm tra");
 			notification.setContent(content.toString());
 			notificationService.sendToStaff(notification);
 		}
 	}
+
+//	@Scheduled(cron = "0 0/1 * * * *") //per 1 minutes
+//	public void test() throws Exception {
+//		Notification notification = new Notification();
+//		notification.setStatus(Constant.STATUS.UNREAD);
+//		notification.setTitle("Thông báo cho khách hàng");
+//		notification.setUsername("vuvanduc0501@gmail.com");
+//		notificationService.sendNotifcationToUser(notification.getUsername(),notification);
+//	}
 
 	public String forgotPassword(String username) throws Exception {
 		Account account = accountRepository.findUserByUsername(username);

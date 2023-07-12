@@ -40,12 +40,12 @@ public class TestController {
 
 	@GetMapping("/")
 	@ResponseBody
-	@PreAuthorize("hasRole('ROLE_USER')")
+//	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponMessage test() {
 		ResponMessage responMessage = new ResponMessage();
 		responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 		responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-		responMessage.setData("Tour guide");
+		responMessage.setData("Fix CORS");
 		this.notificationService.test();
 		return responMessage;
 	}

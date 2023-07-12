@@ -26,13 +26,13 @@ public class BookTour {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
 	private String name;
-	@Column
+	@Column(nullable = false)
 	private String email;
 	@Column
 	private String  code;
-	@Column
+	@Column(nullable = false)
 	private String tourTripCode;
 	@Column
 	private Instant timeCreate;
@@ -42,11 +42,11 @@ public class BookTour {
 	private Long moneyToPay;
 	@Column
 	private String detail;
-	@Column
+	@Column(nullable = false)
 	private  int numberOfAdjust;
-	@Column
+	@Column(nullable = false)
 	private  int numberOfChildren;
-	@Column
+	@Column(nullable = false)
 	private String phoneNumber;
 	
 	@JsonIgnore

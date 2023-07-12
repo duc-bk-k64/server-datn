@@ -22,6 +22,7 @@ import hust.project3.service.AccountService;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(Constant.API.PREFIX)
 public class AccountController {
     @Autowired

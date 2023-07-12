@@ -9,6 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(Constant.API.PREFIX)
 public class ThreadController {
     @Autowired

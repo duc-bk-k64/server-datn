@@ -9,7 +9,7 @@ import hust.project3.common.Constant;
 import hust.project3.model.ResponMessage;
 import hust.project3.model.Tour.TourCreate;
 import hust.project3.service.Tour.TourService;
-
+//@CrossOrigin
 @RestController
 @RequestMapping(Constant.API.PREFIX)
 public class TourController {

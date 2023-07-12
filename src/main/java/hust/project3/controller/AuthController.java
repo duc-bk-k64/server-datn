@@ -16,14 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import hust.project3.common.*;
@@ -47,6 +40,7 @@ import hust.project3.repository.RoleRepository;
 import hust.project3.service.AccountService;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(Constant.API.PREFIX_AUTH)
 public class AuthController {
     @Autowired
@@ -231,10 +225,16 @@ public class AuthController {
 //				responMessage.setData(e.getMessage());
             } else if (accountRepository.existsByCode(facebookModel.getId())) {
                 // đã đăng nhập trước đó
-                String token = jwtProvider.generateToken(facebookModel.getId());
-                responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
-                responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-                responMessage.setData(token);
+                Account account = accountRepository.findUserByUsername(facebookModel.getId());
+                if(account.getStatus() == Constant.STATUS.DE_ACTIVE) {
+                    responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                    responMessage.setMessage("Account is deactivate");
+                } else {
+                    String token = jwtProvider.generateToken(facebookModel.getId());
+                    responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+                    responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+                    responMessage.setData(token);
+                }
             } else {
                 // đăng nhập lần đầu
                 Account account = new Account();
@@ -284,10 +284,17 @@ public class AuthController {
 //				responMessage.setData(e.getMessage());
             } else if (accountRepository.existsByUsername(googleModel.getEmail())) {
                 // đã đăng nhập trước đó
-                String token = jwtProvider.generateToken(googleModel.getEmail());
-                responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
-                responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-                responMessage.setData(token);
+                Account account = accountRepository.findUserByUsername(googleModel.getEmail());
+                if(account.getStatus() == Constant.STATUS.DE_ACTIVE) {
+                    responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+                    responMessage.setMessage("Account is deactivate");
+                } else {
+                    String token = jwtProvider.generateToken(googleModel.getEmail());
+                    responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+                    responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+                    responMessage.setData(token);
+                }
+
             } else {
                 // đăng nhập lần đầu
                 Account account = new Account();

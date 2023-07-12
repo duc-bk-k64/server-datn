@@ -19,6 +19,9 @@ public interface TourRepository extends JpaRepository<Tour,Long>{
 	@Query(value = "SELECT * FROM tour where status = 'available' order by id desc limit 6",nativeQuery = true)
 	List<Tour> findTourAvailable();
 
+	@Query(value = "SELECT * FROM tour  order by id desc ",nativeQuery = true)
+	List<Tour> findAllTour();
+
 	@Query(value = "SELECT * FROM tour where departure = :departure and status = 'available' and number_of_day between :minDay and :maxDay", nativeQuery = true)
 	List<Tour> findTour(@Param("departure") String departure, @Param("minDay") int minDay, @Param("maxDay") int maxDay);
 

@@ -393,7 +393,7 @@ public class TourTripService {
                         Refund refund = new Refund();
                         refund.setStatus(Constant.STATUS.UN_CONFIMRED);
                         refund.setTotalMoney(e.getMoneyToPay());
-                        refund.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy.");
+                        refund.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy, mã đặt tour "+ e.getCode());
                         refund.setTimeCreated(Instant.now());
                         refund.setAccount(e.getAccount());
                         String code = GenerateCode.generateCode();
@@ -404,7 +404,7 @@ public class TourTripService {
 
                         Transaction transaction = new Transaction();
                         transaction.setCode(code);
-                        transaction.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy.");
+                        transaction.setContent("Hoàn tiền do chuyến đi "+ tourTrip.getCode() + " bị hủy, mã đặt tour "+ e.getCode());
                         transaction.setStatus(Constant.STATUS.CONFIMRED);
                         transaction.setTimeCreated(Instant.now());
                         transaction.setType(Constant.TYPE.OUT);

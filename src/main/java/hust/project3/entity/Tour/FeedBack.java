@@ -23,6 +23,8 @@ public class FeedBack {
 	private String content;
 	@Column
 	private int rating;
+	@Column
+	private String username;
 	
 	@ManyToOne 
     @JoinColumn(name = "tour_id") 

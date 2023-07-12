@@ -5,6 +5,7 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import hust.project3.common.Constant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -46,6 +47,9 @@ public class JwtProvider {
 	public boolean validateToken(String token) {
 		if (manageTokenRepository.existsByToken(token))
 			return false;
+		if(accountRepository.findUserByUsername(getLoginFormToke(token)).getStatus() == Constant.STATUS.DE_ACTIVE) {
+			return false;
+		}
 		try {
 			Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
 			return true;

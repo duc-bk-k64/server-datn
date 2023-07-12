@@ -22,11 +22,11 @@ public class PitStop {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
 	private String name;
-	@Column
+	@Column(nullable = false)
 	private String content;
-	@Column
+	@Column(nullable = false)
 	private String imageUrl;
 	@Column(name = "orderNumber") 
 	private int order;

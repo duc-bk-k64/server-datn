@@ -19,7 +19,7 @@ public interface TransactionRepository extends JpaRepository<Transaction,Long> {
     @Query(value = "SELECT  *FROM transaction WHERE type = 'in' and time_created > (NOW() - INTERVAL :day DAY )", nativeQuery = true)
     List<Transaction> findInTransactionByTime(@Param("day") Long day);
 
-    @Query(value = "SELECT  *FROM transaction WHERE  time_created > (NOW() - INTERVAL :day DAY )", nativeQuery = true)
+    @Query(value = "SELECT  *FROM transaction WHERE  time_created > (NOW() - INTERVAL :day DAY ) order by time_created desc ", nativeQuery = true)
     List<Transaction> findAllTransactionByTime(@Param("day") Long day);
 
     @Query(value = "SELECT  *FROM transaction WHERE type = 'in' and time_created > (NOW() - INTERVAL :end DAY) and time_created < (NOW() - INTERVAL :start DAY )", nativeQuery = true)

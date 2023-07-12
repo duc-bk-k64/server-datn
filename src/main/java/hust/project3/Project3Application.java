@@ -28,7 +28,7 @@ public class Project3Application {
 		return new WebMvcConfigurer() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/**").allowedOrigins("http://localhost:4200");
+				registry.addMapping("/**").allowedOrigins("https://vuvanduc.id.vn","https://www.vuvanduc.id.vn","http://localhost:4200","http://vuanduc.id.vn","http://www.vuvanduc.id.vn").allowedMethods("*");
 			}
 		};
 	}
@@ -47,27 +47,27 @@ public class Project3Application {
 		expressionHandler.setRoleHierarchy(roleHierarchy());
 		return expressionHandler;
 	}
-	@Bean
-	NewTopic notification() {
-		return new NewTopic("notificationDATN",2,(short) 1);
-
-	}
-
-	@Bean
-	NewTopic feedback() {
-		return new NewTopic("feedbackDATN",2,(short) 1);
-
-	}
-
-	@Bean
-	NewTopic staff() {
-		return new NewTopic("notificationStaffDATN",2,(short) 1);
-
-	}
-
-	@Bean
-	JsonMessageConverter converter() {
-		return new JsonMessageConverter();
-	}
+//	@Bean
+//	NewTopic notification() {
+//		return new NewTopic("notificationDATN",2,(short) 1);
+//
+//	}
+//
+//	@Bean
+//	NewTopic feedback() {
+//		return new NewTopic("feedbackDATN",2,(short) 1);
+//
+//	}
+//
+//	@Bean
+//	NewTopic staff() {
+//		return new NewTopic("notificationStaffDATN",2,(short) 1);
+//
+//	}
+//
+//	@Bean
+//	JsonMessageConverter converter() {
+//		return new JsonMessageConverter();
+//	}
 
 }

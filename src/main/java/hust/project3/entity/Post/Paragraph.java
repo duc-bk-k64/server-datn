@@ -22,11 +22,11 @@ public class Paragraph implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
 	private String title;
-	@Column(length = 10000)
+	@Column(length = 10000,nullable = false)
 	private String  content;
-	@Column
+	@Column(nullable = false)
 	private String imageUrl;
 	@Column(name = "numberOrder")
 	private int order;

@@ -1,6 +1,7 @@
 package hust.project3.config;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +31,9 @@ import hust.project3.service.CustomAccessDeniedHandler;
 import hust.project3.service.CustomOAuth2UserService;
 import hust.project3.service.CustomOauth2User;
 import hust.project3.service.CustomUserDetailService;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @SuppressWarnings("deprecation")
 @Configuration
@@ -89,4 +93,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AccessDeniedHandler accessDeniedHandler() {
 		return new CustomAccessDeniedHandler();
 	}
+
 }

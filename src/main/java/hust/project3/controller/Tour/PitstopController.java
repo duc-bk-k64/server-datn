@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(Constant.API.PREFIX)
 @PreAuthorize("hasRole('ROLE_STAFF')")
 public class PitstopController {

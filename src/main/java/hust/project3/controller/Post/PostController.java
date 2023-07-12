@@ -10,6 +10,7 @@ import hust.project3.model.ResponMessage;
 import hust.project3.service.Post.PostService;
 
 @RestController
+//@CrossOrigin
 @RequestMapping(Constant.API.PREFIX)
 @PreAuthorize("hasRole('ROLE_STAFF')")
 public class PostController {

@@ -62,7 +62,7 @@ public class TourService {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			ArrayList<TourModel> tourModels = new ArrayList<>();
-			tourRepository.findAll().forEach(e -> {
+			tourRepository.findAllTour().forEach(e -> {
 				tourModels.add(e.toModel());
 			});
 			responMessage.setData(tourModels);

@@ -21,9 +21,9 @@ public class Transaction {
 	private Long id;
 	@Column
 	private String code;
-	@Column
+	@Column(nullable = false)
 	private Long totalMoney;
-	@Column
+	@Column(nullable = false)
 	private String content;
 	@Column
 	private String createdBy;
@@ -32,7 +32,7 @@ public class Transaction {
 
 	@Column
 	private Instant timeCreated;
-	@Column
+	@Column(nullable = false)
 	private String type;
 
 	public TransactionModel toModel() {

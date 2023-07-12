@@ -23,11 +23,17 @@ public class DestinationService {
 	public ResponMessage create(String name) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
-			Destination destination = new Destination();
-			destination.setName(name);
-			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
-			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
-			responMessage.setData(tourDestinationRepository.save(destination));
+			if(!tourDestinationRepository.existsByName(name)) {
+				Destination destination = new Destination();
+				destination.setName(name);
+				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
+				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
+				responMessage.setData(tourDestinationRepository.save(destination));
+			}
+			else{
+				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
+				responMessage.setMessage("Điểm du lịch đã tồn tại");
+			}
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 			responMessage.setMessage(e.getMessage());

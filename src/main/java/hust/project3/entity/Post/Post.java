@@ -28,9 +28,9 @@ public class Post implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
 	private String title;
-	@Column
+	@Column(nullable = false)
 	private String imageUrl;
 	@Column
 	private Date timeCreated;

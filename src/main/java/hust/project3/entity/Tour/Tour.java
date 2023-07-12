@@ -28,19 +28,19 @@ public class Tour {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@Column
+	@Column(nullable = false)
 	private String name;
-	@Column
+	@Column(nullable = false)
 	private String code;
 	@Column 
 	private String createdBy;
-	@Column
+	@Column (nullable = false)
 	private int numberOfDay;
-	@Column
+	@Column(nullable = false)
 	private int numberOfNight;
 	@Column
 	private String departure;
-	@Column
+	@Column(nullable = false)
 	private String imageUrl;
 	@Column
 	private String status;

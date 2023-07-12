@@ -28,11 +28,11 @@ public class TourTrip {
 	private Long id;
 	@Column
 	private String code;
-	@Column
+	@Column(nullable = false)
 	private Long priceForChidren;
-	@Column
+	@Column(nullable = false)
 	private  Long price;
-	@Column
+	@Column(nullable = false)
 	private Date departureDay;
 	@Column
 	private String status;
