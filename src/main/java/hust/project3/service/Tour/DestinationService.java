@@ -19,18 +19,17 @@ import hust.project3.repository.Tour.TourDestinationRepository;
 public class DestinationService {
 	@Autowired
 	private TourDestinationRepository tourDestinationRepository;
-	
+
 	public ResponMessage create(String name) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
-			if(!tourDestinationRepository.existsByName(name)) {
+			if (!tourDestinationRepository.existsByName(name)) {
 				Destination destination = new Destination();
 				destination.setName(name);
 				responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 				responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 				responMessage.setData(tourDestinationRepository.save(destination));
-			}
-			else{
+			} else {
 				responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
 				responMessage.setMessage("Điểm du lịch đã tồn tại");
 			}
@@ -40,14 +39,14 @@ public class DestinationService {
 		}
 		return responMessage;
 	}
-	
+
 	public ResponMessage findAll() {
 		ResponMessage responMessage = new ResponMessage();
 		try {
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			List<DestinationModel> destinationModels = new ArrayList<>();
-			tourDestinationRepository.findAll().forEach( e -> {
+			tourDestinationRepository.findAll().forEach(e -> {
 				destinationModels.add(e.toModel());
 			});
 
@@ -58,6 +57,7 @@ public class DestinationService {
 		}
 		return responMessage;
 	}
+
 	public ResponMessage findByTourId(Long tourId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -83,7 +83,8 @@ public class DestinationService {
 			List<TourModel> tourModels = new ArrayList<>();
 			Destination destination = tourDestinationRepository.findDesById(desId);
 			destination.getTours().forEach(e -> {
-				tourModels.add(e.toModel());
+				if (e.getStatus().equals("available"))
+					tourModels.add(e.toModel());
 			});
 			responMessage.setData(tourModels);
 		} catch (Exception e) {
@@ -92,7 +93,5 @@ public class DestinationService {
 		}
 		return responMessage;
 	}
-
-
 
 }

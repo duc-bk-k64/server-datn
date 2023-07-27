@@ -17,8 +17,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class FeedbackService {
-//    @Autowired
-//    private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
     @Autowired
     private FeedbackRepository feedbackRepository;
     @Autowired
@@ -42,10 +42,10 @@ public class FeedbackService {
                     responMessage.setMessage(Constant.MESSAGE.SUCCESS);
                     feedBack = feedbackRepository.save(feedBack);
                     responMessage.setData(feedBack);
-//                    FeedbackModel feedbackModel = new FeedbackModel();
-//                    feedbackModel.setId(feedBack.getId());
-//                    feedbackModel.setContent(feedBack.getContent());
-//                    kafkaTemplate.send("feedbackDATN",feedbackModel);
+                    FeedbackModel feedbackModel = new FeedbackModel();
+                    feedbackModel.setId(feedBack.getId());
+                    feedbackModel.setContent(feedBack.getContent());
+                    kafkaTemplate.send("feedbackDATN",feedbackModel);
                 }
                 else {
                     responMessage.setResultCode(Constant.RESULT_CODE.ERROR);

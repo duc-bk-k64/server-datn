@@ -2,8 +2,6 @@ package hust.project3.service.BookTour;
 
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
 
 import hust.project3.Utils.GenerateCode;
 import hust.project3.entity.Money.Bill;
@@ -15,7 +13,6 @@ import hust.project3.repository.Money.TransactionRepository;
 import hust.project3.service.NotificationService;
 import hust.project3.service.Tour.TourTripService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.CreatedBy;
 import org.springframework.stereotype.Service;
 
 import hust.project3.common.Constant;
@@ -66,6 +63,7 @@ public class BookTourService {
 			notification.setTitle("Thông báo có đơn đặt tour mới");
 			notification.setContent("Hệ thông Travel xin thông báo hệ thống có đơn đặt tour mới vỡi mã "+bookTour.getCode() +".Nhân viên vui lòng kiểm tra, liên hệ và xác nhận khách hàng. Xin trân trọng cảm ơn.");
 			this.notificationService.sendToStaff(notification);
+			this.notificationService.sendTransaction();
 			responMessage.setResultCode(Constant.RESULT_CODE.SUCCESS);
 			responMessage.setMessage(Constant.MESSAGE.SUCCESS);
 			responMessage.setData(bookTour.toModel());
@@ -225,9 +223,11 @@ public class BookTourService {
 				transaction.setCreatedBy("SYSTEM");
 				transaction.setTotalMoney(bookTour.getMoneyToPay());
 				transactionRepository.save(transaction);
-
+                
 				bill.setCode(code);
 				billRepository.save(bill);
+				Thread.sleep(500);
+				this.notificationService.sendTransaction();
 			}
 		} catch (Exception e) {
 			responMessage.setResultCode(Constant.RESULT_CODE.ERROR);

@@ -71,6 +71,8 @@ public class AuthController {
     private FeedbackService feedbackService;
     @Autowired
     private DestinationService destinationService;
+    @Autowired
+    private DepartureService departureService;
 
     private RestTemplate restTemplate = new RestTemplate();
     private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
@@ -445,6 +447,11 @@ public class AuthController {
         return destinationService.findTourByDesId(desId);
 
     }
+    @GetMapping("/departure/findAll")
+	@ResponseBody
+	public ResponMessage findAll() {
+		return departureService.findAll();
+	}
 
 
 }

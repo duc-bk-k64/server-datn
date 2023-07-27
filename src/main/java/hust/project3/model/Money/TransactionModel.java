@@ -1,12 +1,8 @@
 package hust.project3.model.Money;
 
-import hust.project3.Utils.DateUtils;
 import hust.project3.entity.Money.Transaction;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.Column;
-import java.time.Instant;
 
 @Getter
 @Setter

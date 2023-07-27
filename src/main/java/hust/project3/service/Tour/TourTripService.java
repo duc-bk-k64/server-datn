@@ -13,7 +13,6 @@ import hust.project3.entity.Money.Refund;
 import hust.project3.entity.Money.Transaction;
 import hust.project3.entity.Notification;
 import hust.project3.entity.Tour.TripPitstop;
-import hust.project3.model.AccountModel;
 import hust.project3.model.Tour.TourTripInfor;
 import hust.project3.model.Tour.TourTripModel;
 import hust.project3.repository.AccountRepository;

@@ -27,7 +27,7 @@ public class PitstopService {
 
     @Autowired
     private TourTripRepository tourTripRepository;
-    @CacheEvict(key = "#tourId", value = "responMessage")
+    @CacheEvict(key = "#tourId+'_pitstop'", value = "responMessage")
     public ResponMessage createList(List<PitStopModel> pitStops, Long tourId) {
         ResponMessage responMessage = new ResponMessage();
         try {
@@ -52,7 +52,7 @@ public class PitstopService {
         }
         return responMessage;
     }
-    @Cacheable(value = "responMessage", key = "#tourId")
+    @Cacheable(value = "responMessage", key = "#tourId+'_pitstop'")
     public ResponMessage findByTourId(Long tourId) {
         ResponMessage responMessage = new ResponMessage();
         try {
@@ -71,7 +71,7 @@ public class PitstopService {
         }
         return responMessage;
     }
-    @CacheEvict(key = "#tourId", value = "responMessage")
+    @CacheEvict(key = "#tourId+'_pitstop'", value = "responMessage")
     public ResponMessage updateList(List<PitStopModel> pitStops, Long tourId,List<Long> deleteId) {
         ResponMessage responMessage = new ResponMessage();
         try {

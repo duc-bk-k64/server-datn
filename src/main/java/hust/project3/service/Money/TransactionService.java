@@ -8,6 +8,8 @@ import hust.project3.model.Money.StatisticModel;
 import hust.project3.model.Money.TransactionModel;
 import hust.project3.model.ResponMessage;
 import hust.project3.repository.Money.TransactionRepository;
+import hust.project3.service.NotificationService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +23,8 @@ import java.util.List;
 public class TransactionService {
     @Autowired
     private TransactionRepository transactionRepository;
+    @Autowired
+    private NotificationService notificationService;
     public ResponMessage findAll() {
         ResponMessage responMessage = new ResponMessage();
         try {
@@ -123,6 +127,8 @@ public class TransactionService {
             transaction.setCode(code);
             transaction.setStatus(Constant.STATUS.CONFIMRED);
             responMessage.setData(transactionRepository.save(transaction).toModel());
+            Thread.sleep(500);
+            this.notificationService.sendTransaction();
         }catch (Exception e) {
             responMessage.setResultCode(Constant.RESULT_CODE.ERROR);
             responMessage.setMessage(e.getMessage());
