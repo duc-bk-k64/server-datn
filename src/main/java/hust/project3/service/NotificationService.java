@@ -20,15 +20,15 @@ public class NotificationService {
 	@Autowired
 	private NotificationRepository notificationRepository;
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+//	@Autowired
+//	private KafkaTemplate<String, Object> kafkaTemplate;
 	
 	public void sendNotifcationToUser(String username, Notification message) throws Exception {
 		try {
 			message.setStatus(Constant.STATUS.UNREAD);
 			message.setTimeCreated(Instant.now());
 			notificationRepository.save(message);
-			kafkaTemplate.send("notificationDATN",message);
+//			kafkaTemplate.send("notificationDATN",message);
 			simpMessagingTemplate.convertAndSendToUser(username, "/queue/reply",message);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
@@ -40,7 +40,7 @@ public class NotificationService {
 			message.setStatus(Constant.STATUS.UNREAD);
 			message.setTimeCreated(Instant.now());
 			notificationRepository.save(message);
-			kafkaTemplate.send("notificationStaffDATN",message);
+//			kafkaTemplate.send("notificationStaffDATN",message);
 			simpMessagingTemplate.convertAndSend( "/topic/staff",message.getTitle());
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
@@ -58,8 +58,8 @@ public class NotificationService {
 
 //	@KafkaListener(id = "sendUser", topics = "notificationDATN")
 //	public void sendUser(Notification message) {
-////		System.out.println(message.getTitle());
-//		simpMessagingTemplate.convertAndSendToUser(message.getUsername(), "/queue/reply",message.getTitle());
+//		System.out.println(message.getTitle());
+////		simpMessagingTemplate.convertAndSendToUser(message.getUsername(), "/queue/reply",message.getTitle());
 //	}
 //
 //	@KafkaListener(id = "sendStaff", topics = "notificationStaffDATN")

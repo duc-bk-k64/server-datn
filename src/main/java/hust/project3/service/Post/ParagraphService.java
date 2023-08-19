@@ -16,13 +16,13 @@ import hust.project3.repository.Post.ParagraphRepository;
 import hust.project3.repository.Post.PostRepository;
 
 @Service
-@CacheConfig(cacheNames = {"paragraph"})
+//@CacheConfig(cacheNames = {"paragraph"})
 public class ParagraphService {
 	@Autowired
 	private ParagraphRepository paragraphRepository;
 	@Autowired
 	private PostRepository postRepository;
-	@CacheEvict(key = "#postId+'_paragraph'", value = "responMessage")
+//	@CacheEvict(key = "#postId+'_paragraph'", value = "responMessage")
 	public ResponMessage createList(Long postId,List<Paragraph> paragraphs) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -45,7 +45,7 @@ public class ParagraphService {
 		}
 		return responMessage;
 	}
-	@Cacheable(value = "responMessage", key = "#postId+'_paragraph'")
+//	@Cacheable(value = "responMessage", key = "#postId+'_paragraph'")
 	public ResponMessage findByPostId(Long postId) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
@@ -61,7 +61,7 @@ public class ParagraphService {
 		return responMessage;
 	}
 
-	@CacheEvict(key = "#postId+'_paragraph'", value = "responMessage")
+//	@CacheEvict(key = "#postId+'_paragraph'", value = "responMessage")
 	public ResponMessage updateList(Long postId,List<Long> deleteId,List<Paragraph> update) {
 		ResponMessage responMessage = new ResponMessage();
 		try {
